@@ -27,6 +27,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private int mResolucaoWidth = 320, mResolucaoHeight = 240;
     private boolean isRunning = false;
     private boolean isCalibrando = false;
+    private boolean isCalibrado = false;
     private SurfaceHolder mHolder;
     private Camera mCamera;
     private int mImageRGB[] = new int[mResolucaoHeight*mResolucaoWidth];
@@ -34,7 +35,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private FrameLayout mBloco0, mBloco1, mBloco2, mBloco3, mBloco4;
     private double[] blocosMedia = new double[5];
     private double[] blocosQtdSoma = new double[5];
-    private int blocoDivisor;
+    private int[] blocosMenor = new int[5];
+    private int[] blocosMaior = new int[5];
+    private int blocosDivisor;
+    private int calibrarContador = 0;
 
     CameraPreview(Context context, Camera camera, Activity p){
         super(context);
@@ -84,6 +88,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mBloco2 = (FrameLayout)parent.findViewById(R.id.frameBloco2);
         mBloco3 = (FrameLayout)parent.findViewById(R.id.frameBloco3);
         mBloco4 = (FrameLayout)parent.findViewById(R.id.frameBloco4);
+
+        mBloco0.setOnTouchListener(this);
     }
 
     @Override
@@ -154,7 +160,42 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     protected void Calibrar(){
+        int i;
+        for(i = 0; i < 5; i++){
+            if(blocosMedia[i] > blocosMaior[i])
+                blocosMaior[i] = (int)blocosMedia[i];
+            if(blocosMedia[i] < blocosMenor[i])
+                blocosMenor[i] = (int)blocosMedia[i];
+        }
+        calibrarContador++;
+        isCalibrando = true;
+        if(calibrarContador == 50)
+            CalibrarFim();
+    }
 
+    protected void CalibrarFim(){
+        int somaMenor = 0, somaMaior = 0;
+        int i;
+        for(i = 0; i < 5; i++){
+            somaMaior += blocosMaior[i];
+            somaMenor += blocosMenor[i];
+        }
+        somaMaior /= 5;
+        somaMenor /= 5;
+        blocosDivisor = (somaMaior + somaMenor)/2;
+        isCalibrando = false;
+        isCalibrado = true;
+        calibrarContador = 0;
+        Log.d("OK", "Calibrado!");
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if(v == mBloco0){
+            Log.d("CAB", "Calibrando...");
+            isCalibrando = true;
+        }
+        return false;
     }
 
     @Override
@@ -205,10 +246,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
 
-        return false;
-    }
 }
 
