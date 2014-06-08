@@ -3,11 +3,14 @@ package com.aronbordin.robo.camera;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -17,7 +20,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import java.io.ByteArrayOutputStream;
 import java.lang.Runnable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -28,16 +34,18 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private boolean isRunning = false;
     private boolean isCalibrando = false;
     private boolean isCalibrado = false;
+    private boolean isFlashOn = false;
     private SurfaceHolder mHolder;
     private Camera mCamera;
     private int mImageRGB[] = new int[mResolucaoHeight*mResolucaoWidth];
     private Activity parent;
     private FrameLayout mBloco0, mBloco1, mBloco2, mBloco3, mBloco4;
+    private List<FrameLayout> mBlocos = new ArrayList<FrameLayout>();
     private double[] blocosMedia = new double[5];
     private double[] blocosQtdSoma = new double[5];
     private int[] blocosMenor = new int[5];
     private int[] blocosMaior = new int[5];
-    private int blocosDivisor;
+    private int blocosDivisor = 100;
     private int calibrarContador = 0;
 
     CameraPreview(Context context, Camera camera, Activity p){
@@ -66,9 +74,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 Camera.Parameters p = mCamera.getParameters();
 
                 p.setPreviewSize(mResolucaoWidth, mResolucaoHeight);
-//                p.setPreviewFormat(ImageFormat.YV12);
-                mCamera.setParameters(p);
 
+
+                mCamera.setParameters(p);
 
                 mCamera.setPreviewDisplay(surfaceHolder);//camera mostra aqui
                 mCamera.setPreviewCallback(this);
@@ -90,6 +98,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mBloco4 = (FrameLayout)parent.findViewById(R.id.frameBloco4);
 
         mBloco0.setOnTouchListener(this);
+        mBloco1.setOnTouchListener(this);
+
+        mBlocos.add(mBloco0);
+        mBlocos.add(mBloco1);
+        mBlocos.add(mBloco2);
+        mBlocos.add(mBloco3);
+        mBlocos.add(mBloco4);
     }
 
     @Override
@@ -128,15 +143,23 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                     blocosMedia[i] = 0;
                     blocosQtdSoma[i] = 0;
                 }
-                for (i = 20; i < 40; i++) {
+                int d = 0;
+                byte newVet[] = new byte[data.length];
+                for(i = 0; i < mResolucaoHeight; i++)
+                    for(k = 0; k < mResolucaoWidth; k++)
+                        newVet[d++] = data[mResolucaoWidth*mResolucaoHeight - mResolucaoHeight*k - i - 1];
+
+
+                for (i = 0; i < 20 ; i++) {
                     for (k = mResolucaoWidth * i; k < mResolucaoWidth * (i + 1); k++) {
                         if (k % ((int) mResolucaoWidth / 5) == 0)
                             j++;
-                        blocosMedia[j] += ((int) data[k]) & 0xff;
+                        blocosMedia[j] += ((int) newVet[k]) & 0xff;
                         blocosQtdSoma[j]++;
                     }
                     j = -1;
                 }
+
 
                 for (i = 0; i < 5; i++)
                     blocosMedia[i] = blocosMedia[i] / blocosQtdSoma[i];
@@ -146,8 +169,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                     Calibrar();
                     return;
                 }
-                mBloco0.setBackgroundColor(Color.RED);
-
+                for(i = 0; i < 5; i++)
+                    mBlocos.get(i).setBackgroundColor(blocosMedia[i] > blocosDivisor ? Color.WHITE : Color.BLACK);
 
             }
         } catch (Exception e){
@@ -169,7 +192,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
         calibrarContador++;
         isCalibrando = true;
-        if(calibrarContador == 50)
+        if(calibrarContador == 100)
             CalibrarFim();
     }
 
@@ -194,6 +217,24 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         if(v == mBloco0){
             Log.d("CAB", "Calibrando...");
             isCalibrando = true;
+        }
+
+        if(v == mBloco1){
+            try {
+                if (isFlashOn) {
+                    Camera.Parameters p = mCamera.getParameters();
+                    p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                    mCamera.setParameters(p);
+                    isFlashOn = false;
+                } else {
+                    Camera.Parameters p = mCamera.getParameters();
+                    p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                    mCamera.setParameters(p);
+                    isFlashOn = true;
+                }
+            } catch(Exception e){
+                Log.e("ERRO", "Erro ao ligar/desligar flash. Erro: " + e.getMessage());
+            }
         }
         return false;
     }
@@ -245,7 +286,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             }
         }
     }
-
 
 }
 
