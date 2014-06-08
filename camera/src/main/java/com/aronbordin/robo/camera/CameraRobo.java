@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Created by neo on 06/06/14.
  */
-public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback, Camera.PreviewCallback, View.OnTouchListener{
+public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, Camera.PreviewCallback, View.OnTouchListener{
     private int mResolucaoWidth = 320, mResolucaoHeight = 240;
     private boolean isRunning = false;
     private boolean isCalibrando = false;
@@ -48,7 +48,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private int blocosDivisor = 100;
     private int calibrarContador = 0;
 
-    CameraPreview(Context context, Camera camera, MainActivity p){
+    CameraRobo(Context context, Camera camera, MainActivity p){
         super(context);
         parent = p;
         mCamera = camera;
@@ -100,6 +100,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mBloco0.setOnTouchListener(this);
         mBloco1.setOnTouchListener(this);
         mBloco2.setOnTouchListener(this);
+        mBloco3.setOnTouchListener(this);
+        mBloco4.setOnTouchListener(this);
+
 
         mBlocos.add(mBloco0);
         mBlocos.add(mBloco1);
@@ -223,6 +226,14 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         parent.mLogger.Logar("Ok! Calibrado, divisor = " + blocosDivisor);
     }
 
+    public int isPreto(int k){
+        return blocosMedia[k] < blocosDivisor ? 1 : 0;
+    }
+
+    public int isBranco(int k){
+        return blocosMedia[k] > blocosDivisor ? 1 : 0;
+    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if(v == mBloco0){
@@ -252,6 +263,14 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
         if(v == mBloco2){
             parent.mBluetooth.enviarMsg("ARON#");
+        }
+
+        if(v == mBloco3){
+            parent.iniciarRobo();
+        }
+
+        if(v == mBloco4){
+            parent.pararRobo();
         }
         return false;
     }

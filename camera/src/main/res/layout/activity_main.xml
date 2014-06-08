@@ -108,13 +108,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="0.20"
-                android:id="@+id/frameBloco3" />
+                android:id="@+id/frameBloco3" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="GO!!"
+                    android:id="@+id/textView"
+                    android:layout_gravity="center_horizontal|top"
+                    android:textColor="#ffff0012" />
+            </FrameLayout>
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="0.20"
-                android:id="@+id/frameBloco4" />
+                android:id="@+id/frameBloco4" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="X"
+                    android:id="@+id/textView4"
+                    android:layout_gravity="center_horizontal|top"
+                    android:textColor="#ffff0012" />
+            </FrameLayout>
         </LinearLayout>
 
     </GridLayout>

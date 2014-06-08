@@ -14,9 +14,10 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
     private Camera mCamera = null;
-    private CameraPreview mPreview;
+    public CameraRobo mPreview;
     public BluetoothRobo mBluetooth;
     private FrameLayout mFrameCamera;
+    private Robo mRobo;
     public Logger mLogger;
     private MainActivity self;
 
@@ -31,7 +32,7 @@ public class MainActivity extends Activity {
 
         createCamera();
         if(mCamera != null) {
-            mPreview = new CameraPreview(this, mCamera, this);
+            mPreview = new CameraRobo(this, mCamera, this);
             mFrameCamera = (FrameLayout) findViewById(R.id.frameCamera);
             mFrameCamera.addView(mPreview);
         }
@@ -44,6 +45,10 @@ public class MainActivity extends Activity {
                 mBluetooth.Conectar();
             }
         });
+
+        mLogger.Logar("\t\tCriando robô...");
+        mRobo = new Robo(this);
+        mLogger.Logar("\t\tOk!");
 
 
 
@@ -59,5 +64,13 @@ public class MainActivity extends Activity {
             mLogger.LogarErro("->Erro ao abrir a camera!");
             mCamera = null;
         }
+    }
+
+    public void iniciarRobo(){
+        mRobo.IniciarRobo();
+    }
+
+    public void pararRobo(){
+        mRobo.PararRobo();
     }
 }
