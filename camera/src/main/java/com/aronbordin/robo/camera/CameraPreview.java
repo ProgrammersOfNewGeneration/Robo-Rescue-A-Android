@@ -143,21 +143,30 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                     blocosMedia[i] = 0;
                     blocosQtdSoma[i] = 0;
                 }
-                int d = 0;
-                byte newVet[] = new byte[data.length];
-                for(i = 0; i < mResolucaoHeight; i++)
-                    for(k = 0; k < mResolucaoWidth; k++)
-                        newVet[d++] = data[mResolucaoWidth*mResolucaoHeight - mResolucaoHeight*k - i - 1];
+//                int d = 0;
+//                byte newVet[] = new byte[data.length];
+//                for(i = 0; i < mResolucaoHeight; i++)
+//                    for(k = 0; k < mResolucaoWidth; k++)
+//                        newVet[d++] = data[mResolucaoWidth*mResolucaoHeight - mResolucaoHeight*k - i - 1];
+//
 
+//                for (i = 0; i < 20 ; i++) {
+//                    for (k = mResolucaoWidth * i; k < mResolucaoWidth * (i + 1); k++) {
+//                        if (k % ((int) mResolucaoWidth / 5) == 0)
+//                            j++;
+//                        blocosMedia[j] += ((int) data[k]) & 0xff;
+//                        blocosQtdSoma[j]++;
+//                    }
+//                    j = -1;
+//                }
 
-                for (i = 0; i < 20 ; i++) {
-                    for (k = mResolucaoWidth * i; k < mResolucaoWidth * (i + 1); k++) {
-                        if (k % ((int) mResolucaoWidth / 5) == 0)
-                            j++;
-                        blocosMedia[j] += ((int) newVet[k]) & 0xff;
-                        blocosQtdSoma[j]++;
-                    }
-                    j = -1;
+                int posFaixa = 300;
+                int nivelPreto = 70;
+                for (i=0; i<240; i++) {
+                    if(i % 48 == 0)
+                        j++;
+                    blocosMedia[j] += ((int) data[posFaixa + 320 * i]) & 0xff;
+                    blocosQtdSoma[j]++;
                 }
 
 
