@@ -29,22 +29,23 @@ Usar '@' para delimitar byte
 # Valores do protocolo
 
 ## Número rotina
-	1 - Motor.setVelocidade(byte v);
-	2 - Motor.setVelocidadeMotor1(byte v);
-	3 - Motor.setVelocidadeMotor2(byte v);
-	4 - Motor.irFrente();
-	5 - Motor.irDireita();
-	6 - Motor.irDireitaForte();
-	7 - Motor.irEsquerda();
-	8 - Motor.irEsquerdaForte();
-	9 - Motor.irRe();
+		1 - Motor.setVelocidade(byte v);
+		2 - Motor::setVelocidadeMotor1(byte v);
+		3 - Motor::setVelocidadeMotor2(byte v);
+		4 - Motor::irFrente();
+		5 - Motor::irDireita();
+		6 - Motor::irDireitaForte();
+		7 - Motor::irEsquerda();
+		8 - Motor::irEsquerdaForte();
+		9 - Motor::irRe();
+		10 - Motor::irParar();
+		11 - Ultrassom::setT_pin(int T_PIN);
+		12 - Ultrassom::setE_pin(int E_PIN);
+		13 - Ultrassom::setM_dist(int M_DIST);
+		14 - Ultrassom::getT_pin();
+		15 - Ultrassom::getE_pin();
+		16 - Ultrassom::getM_dist();
+		17 - Ultrassom::lerDistancia();
 
-	10 - Motor.irParar();
-	11 - Ultrassom.setT_pin(int T_PIN);
-	12 - Ultrassom.setE_pin(int E_PIN);
-	13 - Ultrassom.setM_dist(int M_DIST);
-	14 - Ultrassom.getT_pin();
-	15 - Ultrassom.getE_pin();
-	16 - Ultrassom.getM_dist();
-	17 - Ultrassom.lerDistancia();
+		18 - Arduino::delay(ms)
 

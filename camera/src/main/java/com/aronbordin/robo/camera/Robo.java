@@ -27,16 +27,19 @@ public class Robo extends Thread{
 
     public void IniciarRobo(){
         if(!isRodando) {
-            this.start();
             isRodando = true;
+            if(!this.isAlive())
+                this.start();
             Logar("->Iniciando robô");
         }
     }
 
     public void PararRobo(){
         if(isRodando) {
-            this.stop();
             isRodando = false;
+            mFuncoes.clear();
+            mFuncoes.add("3@10");
+            chamarFuncao();
             Logar("->Parando robô");
         }
     }
@@ -45,7 +48,8 @@ public class Robo extends Thread{
     public void run(){
         try{
             while(true) {
-                Loop();
+                if(isRodando)
+                    Loop();
                 sleep(30);
             }
         } catch (Exception e){
@@ -63,6 +67,7 @@ public class Robo extends Thread{
 
     private void seguirLinha(){
         int c = 0, i;
+        String cmd;
         for (i=0; i<5; i++)
             c = c*2 + mCameraPreview.isPreto(i);
 
@@ -87,10 +92,14 @@ public class Robo extends Thread{
             case 21:
             case 22:
                 Logar("->Virar Esquerda!");
+                cmd = "3@8#";
+                mFuncoes.add(cmd);
                 break;
             case 4:
             case 14://##
-                Logar("->ir Fretne!!");
+                Logar("->ir Frente!!");
+                cmd = "3@4#";
+                mFuncoes.add(cmd);
                 break;
             case 1:
             case 2:
@@ -101,6 +110,8 @@ public class Robo extends Thread{
             case 15:
             case 23://##
                 Logar("->Virar Direita!!");
+                cmd = "3@6#";
+                mFuncoes.add(cmd);
                 break;
         }
     }
@@ -128,7 +139,8 @@ public class Robo extends Thread{
         Iterator i = mFuncoes.iterator();
         while(i.hasNext()){
             String f = (String)i.next();
+            mBluetoothRobo.enviarMsg(f);
         }
+        mFuncoes.clear();
     }
-
 }

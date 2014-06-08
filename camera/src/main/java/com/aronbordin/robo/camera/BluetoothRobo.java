@@ -132,11 +132,31 @@ public class BluetoothRobo extends Thread {
         try {
             if(conectado) {
                 mOut.write(msg.getBytes());
-                parent.mLogger.Logar("[Blue-me]Msg enviada: " + msg);
+            //    Logar("[Blue-me]Msg enviada: " + msg);
             }
 
         } catch (IOException e){
-            parent.mLogger.LogarErro("->Erro ao enviar mensagem: " + e.getMessage());
+            LogarErro("->Erro ao enviar mensagem: " + e.getMessage());
         }
+    }
+
+    private void Logar(String msg){
+        final String log = msg;
+        parent.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parent.mLogger.Logar(log);
+            }
+        });
+    }
+
+    private void LogarErro(String msg){
+        final String log = msg;
+        parent.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parent.mLogger.LogarErro(log);
+            }
+        });
     }
 }
