@@ -138,7 +138,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             return;
         try{
             synchronized (mHolder){
-                int i, k, j = -1;
+                int i, k, j = 5;
                 for (i = 0; i < 5; i++) {
                     blocosMedia[i] = 0;
                     blocosQtdSoma[i] = 0;
@@ -164,7 +164,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 int nivelPreto = 70;
                 for (i=0; i<240; i++) {
                     if(i % 48 == 0)
-                        j++;
+                        j--;
                     blocosMedia[j] += ((int) data[posFaixa + 320 * i]) & 0xff;
                     blocosQtdSoma[j]++;
                 }
