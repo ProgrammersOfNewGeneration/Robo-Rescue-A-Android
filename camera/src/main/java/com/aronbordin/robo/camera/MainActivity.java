@@ -15,11 +15,14 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
     private Camera mCamera = null;
     private CameraPreview mPreview;
+    public BluetoothRobo mBluetooth;
     private FrameLayout mFrameCamera;
     public Logger mLogger;
+    private MainActivity self;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        self = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mLogger = new Logger((TextView)findViewById(R.id.txtLogger), (ScrollView)findViewById(R.id.scrollTxtLogger));
@@ -32,7 +35,19 @@ public class MainActivity extends Activity {
             mFrameCamera = (FrameLayout) findViewById(R.id.frameCamera);
             mFrameCamera.addView(mPreview);
         }
-        mLogger.Logar("->Ok!");
+
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mBluetooth = new BluetoothRobo(self);
+                mBluetooth.Conectar();
+            }
+        });
+
+
+
+        mLogger.Logar("->Ok! Objetos criados!");
     }
 
     protected void createCamera(){

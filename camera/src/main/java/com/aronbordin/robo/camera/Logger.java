@@ -19,26 +19,35 @@ public class Logger {
     }
 
     public void Logar(String txt){
-        Log.d(TAG, txt);
-        mTxtLogger.append(txt + "\n");
+        try {
+            Log.d(TAG, txt);
 
-        mScrollLogger.post(new Runnable() {
-            @Override
-            public void run() {
-                mScrollLogger.fullScroll(View.FOCUS_DOWN);
-            }
-        });
+            mTxtLogger.append(txt + "\n");
+
+            mScrollLogger.post(new Runnable() {
+                @Override
+                public void run() {
+                    mScrollLogger.fullScroll(View.FOCUS_DOWN);
+                }
+            });
+        } catch (Exception e){
+            Log.e(TAG, "ERROR AO LOGAR!!!!!" + e.getMessage());
+        }
     }
 
     public void LogarErro(String txt){
-        Log.e(TAG, txt);
-        mTxtLogger.append(txt + "\n");
+        try {
+            Log.e(TAG, txt);
+            mTxtLogger.append(txt + "\n");
 
-        mScrollLogger.post(new Runnable() {
-            @Override
-            public void run() {
-                mScrollLogger.fullScroll(View.FOCUS_DOWN);
-            }
-        });
+            mScrollLogger.post(new Runnable() {
+                @Override
+                public void run() {
+                    mScrollLogger.fullScroll(View.FOCUS_DOWN);
+                }
+            });
+        } catch (Exception e){
+            Log.e(TAG, "ERROR AO LOGAR!!!!!" + e.getMessage());
+        }
     }
 }

@@ -84,7 +84,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
                 loadBlocos();
             } catch (Exception e) {
-                parent.mLogger.LogarErro("Erro ao setar preview da camera: " + e.getMessage());
+                parent.mLogger.LogarErro("\t\tErro ao setar preview da camera: " + e.getMessage());
             }
         }
 
@@ -99,6 +99,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
         mBloco0.setOnTouchListener(this);
         mBloco1.setOnTouchListener(this);
+        mBloco2.setOnTouchListener(this);
 
         mBlocos.add(mBloco0);
         mBlocos.add(mBloco1);
@@ -247,6 +248,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             } catch(Exception e){
                 parent.mLogger.LogarErro("Erro ao ligar/desligar flash: " + e.getMessage());
             }
+        }
+
+        if(v == mBloco2){
+            parent.mBluetooth.enviarMsg("ARON#");
         }
         return false;
     }
