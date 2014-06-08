@@ -38,7 +38,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private SurfaceHolder mHolder;
     private Camera mCamera;
     private int mImageRGB[] = new int[mResolucaoHeight*mResolucaoWidth];
-    private Activity parent;
+    private MainActivity parent;
     private FrameLayout mBloco0, mBloco1, mBloco2, mBloco3, mBloco4;
     private List<FrameLayout> mBlocos = new ArrayList<FrameLayout>();
     private double[] blocosMedia = new double[5];
@@ -48,7 +48,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private int blocosDivisor = 100;
     private int calibrarContador = 0;
 
-    CameraPreview(Context context, Camera camera, Activity p){
+    CameraPreview(Context context, Camera camera, MainActivity p){
         super(context);
         parent = p;
         mCamera = camera;
@@ -84,7 +84,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
                 loadBlocos();
             } catch (Exception e) {
-                Log.e("ERR", "Erro ao setar preview da camera: " + e.getMessage());
+                parent.mLogger.LogarErro("Erro ao setar preview da camera: " + e.getMessage());
             }
         }
 
@@ -184,6 +184,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             }
         } catch (Exception e){
             e.printStackTrace();
+            parent.mLogger.LogarErro("Erro leitura: " + e.getMessage());
         } finally {
             if(canvas != null){
                 mHolder.unlockCanvasAndPost(canvas);
@@ -218,13 +219,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         isCalibrando = false;
         isCalibrado = true;
         calibrarContador = 0;
-        Log.d("OK", "Calibrado!");
+        parent.mLogger.Logar("Ok! Calibrado, divisor = " + blocosDivisor);
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if(v == mBloco0){
-            Log.d("CAB", "Calibrando...");
+            parent.mLogger.Logar("->Calibrando...");
             isCalibrando = true;
         }
 
@@ -235,14 +236,16 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                     p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                     mCamera.setParameters(p);
                     isFlashOn = false;
+                    parent.mLogger.Logar("->Flash off");
                 } else {
                     Camera.Parameters p = mCamera.getParameters();
                     p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                     mCamera.setParameters(p);
                     isFlashOn = true;
+                    parent.mLogger.Logar("->Flash on");
                 }
             } catch(Exception e){
-                Log.e("ERRO", "Erro ao ligar/desligar flash. Erro: " + e.getMessage());
+                parent.mLogger.LogarErro("Erro ao ligar/desligar flash: " + e.getMessage());
             }
         }
         return false;
