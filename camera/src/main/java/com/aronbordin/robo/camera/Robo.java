@@ -17,6 +17,8 @@ public class Robo extends Thread{
     private boolean isRodando = false;
     private boolean isSeguindoLinha = true;
     private List<String> mFuncoes = new ArrayList<String>();
+    private long interacao = 0;
+    private int msgPedida = 0;
 
     public Robo(MainActivity p){
         parent = p;
@@ -38,7 +40,7 @@ public class Robo extends Thread{
         if(isRodando) {
             isRodando = false;
             mFuncoes.clear();
-            mFuncoes.add("3@10");
+            mFuncoes.add("3@10#");
             chamarFuncao();
             Logar("->Parando robô");
         }
@@ -59,6 +61,7 @@ public class Robo extends Thread{
     }
 
     public void Loop(){
+        interacao++;
         if(isSeguindoLinha){
             seguirLinha();
             chamarFuncao();
@@ -68,6 +71,7 @@ public class Robo extends Thread{
     private void seguirLinha(){
         int c = 0, i;
         String cmd;
+
         for (i=0; i<5; i++)
             c = c*2 + mCameraPreview.isPreto(i);
 
@@ -80,7 +84,7 @@ public class Robo extends Thread{
             case 29:
             case 30://## encruzilhgadas!!!!
             case 31://##
-                Logar("->Encruzilhada!!");
+             //   Logar("->Encruzilhada!!");
                 break;
             case 8:
             case 12:
@@ -97,7 +101,7 @@ public class Robo extends Thread{
                 break;
             case 4:
             case 14://##
-                Logar("->ir Frente!!");
+          //      Logar("->ir Frente!!");
                 cmd = "3@4#";
                 mFuncoes.add(cmd);
                 break;
@@ -109,11 +113,45 @@ public class Robo extends Thread{
             case 7:
             case 15:
             case 23://##
-                Logar("->Virar Direita!!");
+              //  Logar("->Virar Direita!!");
                 cmd = "3@6#";
                 mFuncoes.add(cmd);
                 break;
         }
+
+        if((interacao % 10) == 0)
+            checarDistancia();
+    }
+
+    private void checarDistancia(){
+        String msg = "3@17@" + String.valueOf(msgPedida) + "#";
+        String valor;
+        synchronized (msg) {
+            valor = pedirValor(msg, msgPedida++);
+        }
+        valor = valor.trim();
+        int dist = Integer.valueOf(valor);
+        if(dist<15){
+            Desviar();
+        }
+    }
+
+    private void Desviar(){
+
+    }
+
+    private String pedirValor(String msg, int id){
+        mBluetoothRobo.enviarMsg(msg);
+        while (!mBluetoothRobo.hasMensagem(id))
+            try{
+                msg.wait(10);
+            } catch (InterruptedException e){
+                LogarErro(e.getMessage());
+            }
+        msg.notify();
+        String retorno = mBluetoothRobo.getMensagem(id);
+        retorno = retorno.split("@")[1];
+        return  retorno;
     }
 
     private void Logar(String msg){

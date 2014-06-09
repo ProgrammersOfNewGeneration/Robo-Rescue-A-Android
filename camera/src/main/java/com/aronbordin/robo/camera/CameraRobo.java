@@ -262,7 +262,7 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         }
 
         if(v == mBloco2){
-            parent.mBluetooth.enviarMsg("ARON#");
+            parent.mBluetooth.enviarMsg("3@17@1#");
         }
 
         if(v == mBloco3){

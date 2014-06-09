@@ -8,6 +8,10 @@ import android.content.Intent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,10 +29,14 @@ public class BluetoothRobo extends Thread {
     private boolean conectado = false;
     private int REQUEST_BLUE_ATIVAR = 10;
     private String roboNome;
+    private List<String> mMensgens = new ArrayList<String>();
 
 
     BluetoothRobo(MainActivity p, String Nome){
         try {
+            for(int i = 0; i < 2048; i++){
+                mMensgens.add("");
+            }
             p.mLogger.Logar("\t\tCriando bluetooth...");
             parent = p;
             roboNome = Nome;
@@ -124,8 +132,28 @@ public class BluetoothRobo extends Thread {
     }
 
     public void recebeuMsg(String msg){
-        //
+        try {
+            int id = Integer.valueOf(msg.split("@")[0]);
+            mMensgens.set(id, msg);
+        } catch (Exception e){
+            LogarErro("-> Erro ao receber msg: " + e.getMessage());
+        }
+    }
 
+    public boolean hasMensagem(int i){
+        try{
+            String s = mMensgens.get(i);
+            if(s.length() > 0)
+                return true;
+            else
+                return false;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
+    public String getMensagem(int i){
+        return mMensgens.get(i);
     }
 
     public void enviarMsg(String msg){
