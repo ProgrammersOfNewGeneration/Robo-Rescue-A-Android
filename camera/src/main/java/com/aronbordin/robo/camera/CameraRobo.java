@@ -289,13 +289,12 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         }
 
         if(v == mBloco2){
-            parent.runOnUiThread(new Runnable() {
-
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    parent.mLogger.Logar("Encruzlihada: " + parent.mRobo.pedirValor("3@19@1#", 1));
+                    parent.mRobo.Desviar();
                 }
-            });
+            }).start();
 
         }
 

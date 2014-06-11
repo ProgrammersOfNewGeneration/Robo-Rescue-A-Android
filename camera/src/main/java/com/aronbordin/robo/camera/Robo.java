@@ -17,6 +17,7 @@ public class Robo extends Thread{
     private boolean isRodando = false;
     private boolean isEncruzilhada = false;
     private boolean isSeguindoLinha = true;
+    private boolean isDesviando = false;
     private List<String> mFuncoes = new ArrayList<String>();
     private long interacao = 0;
     private int msgPedida = 0;
@@ -64,10 +65,11 @@ public class Robo extends Thread{
 
     public void Loop(){
         interacao++;
-        if((isSeguindoLinha) && (!isEncruzilhada)){
+        if((isSeguindoLinha) && (!isEncruzilhada) && (!isDesviando)){
             seguirLinha();
             chamarFuncao();
         }
+
     }
 
     private void seguirLinha(){
@@ -142,19 +144,101 @@ public class Robo extends Thread{
     }
 
     private void checarDistancia(){
-        String msg = "3@17@" + String.valueOf(msgPedida) + "#";
-        String valor;
-      //  synchronized (msg) {
-            valor = pedirValor(msg, msgPedida++);
-        //}
-        valor = valor.trim();
-        int dist = Integer.valueOf(valor);
-        if(dist<15){
-            Desviar();
+//        String msg = "3@17@" + String.valueOf(msgPedida) + "#";
+//        String valor;
+//        valor = pedirValor(msg, msgPedida++);
+//        valor = valor.trim();
+        int dist = getDistancia();
+        if((dist<20) && (dist >= 5)){
+            isDesviando = true;
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Desviar();
+                }
+            }).start();
+
         }
     }
 
-    private void Desviar(){
+    private int getDistancia(){
+        String msg = "3@17@" + String.valueOf(msgPedida) + "#";
+        String valor;
+        valor = pedirValor(msg, msgPedida++);
+        valor = valor.trim();
+        return Integer.valueOf(valor);
+    }
+
+    public void Desviar(){
+        Logar("->Desviando...");
+        mFuncoes.clear();
+        //girando para a direita e iniciando desvio
+        mFuncoes.add("3@22@90#"); //gira sendor 90º = esquerda
+        mFuncoes.add("3@6#"); //direita forte
+        mFuncoes.add("3@18@1500#"); //delay(1000)
+
+        //girou direita, irá para frente
+        mFuncoes.add("3@4#"); //ir frente
+        chamarFuncao();
+        Logar("\t\tPassando obstáculo...");
+        while(getDistancia() < 30){ //frente até passar o obstaculo
+            try {
+                sleep(100);
+            } catch (InterruptedException e){
+                //
+            }
+        }
+        Logar("\t\tVirando...");
+        mFuncoes.clear();
+        mFuncoes.add("3@4#");//andar mais um pouco, por seguranca
+        mFuncoes.add("3@18@2000#");
+        //inicia girar esquerda para passar pelo obstaculo
+        mFuncoes.add("3@8#");//esqueda forte
+        mFuncoes.add("3@18@1500#"); //delay
+        //girou, anda frente até passar obstáculo
+        mFuncoes.add("3@4#");
+        chamarFuncao();
+        while(getDistancia() > 30)//anda até estar alinhado com o obstaculo
+        {
+            try {
+                sleep(100);
+            } catch (InterruptedException e){
+                //
+            }
+        }
+
+        while(getDistancia() < 30){//já encontrou, agr qdo for maior q 30 ele já ultrapassou o obs
+            try{
+                sleep(100);
+            } catch (InterruptedException e){
+                //
+            }
+        }
+
+        mFuncoes.clear();
+        mFuncoes.add("3@4#");//ir mais para frente
+        mFuncoes.add("3@18@3000#"); //delay
+
+        //virar esquerda pra voltar linha
+        mFuncoes.add("3@8#");
+        mFuncoes.add("3@18@1500#");//delay
+        mFuncoes.add("3@4#"); //anda frente
+        chamarFuncao();
+        while (mCameraPreview.isPreto(2) == 0){//anda reto até achar a linha
+            try{
+                sleep(50);
+            } catch(InterruptedException e){
+                //
+            }
+        }
+        //vira direita para voltar na pista
+        mFuncoes.add("3@6#");//direita forte
+        mFuncoes.add("3@18@1000#");
+        mFuncoes.add("3@22@0#");
+        chamarFuncao();
+        isDesviando = false;
+
 
     }
 

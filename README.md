@@ -53,5 +53,10 @@ Usar '@' para delimitar parametro
 
 		18 - Arduino::delay(ms)
 		19 - Robo::encruzilhada()
+		
+		20 - Servo::setPin(int P)
+		21 - Servo::getPin()
+		22 - Servo::girar(int d)
+	
 	
 
