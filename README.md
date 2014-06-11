@@ -22,9 +22,13 @@ Segundo byte - SB e Terceiro byte - TB
     TB = primeiro argumento da rotina
     
     O arduino devolverá o valor (ou os valores)
-
+    se Android espera retorno:
+    	-> O último parâmetro deve ser o ID do pedido
+    	-> No retorno, o primeiro parâmetro é o ID do pedido, e o segundo o valor a ser enviado
+    	
+   
 Usar '#' para informar final da mensagem
-Usar '@' para delimitar byte
+Usar '@' para delimitar parametro
 
 # Valores do protocolo
 
@@ -48,4 +52,6 @@ Usar '@' para delimitar byte
 		17 - Ultrassom::lerDistancia();
 
 		18 - Arduino::delay(ms)
+		19 - Robo::encruzilhada()
+	
 

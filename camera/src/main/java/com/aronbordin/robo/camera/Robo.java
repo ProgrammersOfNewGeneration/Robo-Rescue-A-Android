@@ -15,10 +15,12 @@ public class Robo extends Thread{
     private MainActivity parent;
     private Logger mLogger;
     private boolean isRodando = false;
+    private boolean isEncruzilhada = false;
     private boolean isSeguindoLinha = true;
     private List<String> mFuncoes = new ArrayList<String>();
     private long interacao = 0;
     private int msgPedida = 0;
+
 
     public Robo(MainActivity p){
         parent = p;
@@ -62,9 +64,12 @@ public class Robo extends Thread{
 
     public void Loop(){
         interacao++;
-        if(isSeguindoLinha){
+        if((isSeguindoLinha) && (!isEncruzilhada)){
             seguirLinha();
             chamarFuncao();
+        }
+        if(isEncruzilhada){
+            Logar("olá");
         }
     }
 
@@ -84,7 +89,16 @@ public class Robo extends Thread{
             case 29:
             case 30://## encruzilhgadas!!!!
             case 31://##
-             //   Logar("->Encruzilhada!!");
+                Logar("->Encruzilhada!!");
+                new Thread() {
+                    public void run() {
+                        isEncruzilhada = true;
+                        String cmd = "3@19@" + msgPedida + "#";//frente
+                        Logar("-->Encruzilhada:  - >" + pedirValor(cmd, msgPedida++));
+                        isEncruzilhada = false;
+                    }
+                }.start();
+
                 break;
             case 8:
             case 12:
@@ -96,12 +110,12 @@ public class Robo extends Thread{
             case 21:
             case 22:
                 Logar("->Virar Esquerda!");
-                cmd = "3@8#";
+                cmd = "3@7#";
                 mFuncoes.add(cmd);
                 break;
             case 4:
             case 14://##
-          //      Logar("->ir Frente!!");
+                Logar("->ir Frente!!");
                 cmd = "3@4#";
                 mFuncoes.add(cmd);
                 break;
@@ -113,8 +127,8 @@ public class Robo extends Thread{
             case 7:
             case 15:
             case 23://##
-              //  Logar("->Virar Direita!!");
-                cmd = "3@6#";
+                Logar("->Virar Direita!!");
+                cmd = "3@5#";
                 mFuncoes.add(cmd);
                 break;
         }
@@ -126,9 +140,9 @@ public class Robo extends Thread{
     private void checarDistancia(){
         String msg = "3@17@" + String.valueOf(msgPedida) + "#";
         String valor;
-        synchronized (msg) {
+      //  synchronized (msg) {
             valor = pedirValor(msg, msgPedida++);
-        }
+        //}
         valor = valor.trim();
         int dist = Integer.valueOf(valor);
         if(dist<15){
@@ -140,15 +154,18 @@ public class Robo extends Thread{
 
     }
 
-    private String pedirValor(String msg, int id){
-        mBluetoothRobo.enviarMsg(msg);
-        while (!mBluetoothRobo.hasMensagem(id))
-            try{
-                msg.wait(10);
-            } catch (InterruptedException e){
-                LogarErro(e.getMessage());
-            }
-        msg.notify();
+    public String pedirValor(String msg, int id){
+        synchronized (mBluetoothRobo) {
+            mBluetoothRobo.enviarMsg(msg);
+
+            while (!mBluetoothRobo.hasMensagem(id))
+                try {
+                    mBluetoothRobo.wait(10);
+                } catch (InterruptedException e) {
+                    LogarErro(e.getMessage());
+                }
+            mBluetoothRobo.notify();
+        }
         String retorno = mBluetoothRobo.getMensagem(id);
         retorno = retorno.split("@")[1];
         return  retorno;

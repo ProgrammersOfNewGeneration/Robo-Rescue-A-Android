@@ -48,6 +48,7 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
     private int blocosDivisor = 100;
     private int calibrarContador = 0;
 
+
     CameraRobo(Context context, Camera camera, MainActivity p){
         super(context);
         parent = p;
@@ -70,6 +71,7 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
             try {//surface criada, tem q fazer a camera mostrar os dados
                this.setWillNotDraw(false);//desabilita o draw auto do canvas
                 isRunning = true;
+                zerarCalibrar();
 
                 Camera.Parameters p = mCamera.getParameters();
 
@@ -196,6 +198,14 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         }
     }
 
+    protected  void zerarCalibrar(){
+        for(int i = 0; i < 5; i++){
+            blocosMenor[i] = 1000;
+            blocosMaior[i] = -1;
+        }
+
+    }
+
     protected void Calibrar(){
         int i;
         for(i = 0; i < 5; i++){
@@ -211,19 +221,36 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
     }
 
     protected void CalibrarFim(){
-        int somaMenor = 0, somaMaior = 0;
+        int Menor = 1000, Maior = -1;
         int i;
         for(i = 0; i < 5; i++){
-            somaMaior += blocosMaior[i];
-            somaMenor += blocosMenor[i];
+            if(blocosMaior[i] > Maior)
+                Maior = blocosMaior[i];
+            if(blocosMedia[i] < Menor)
+                Menor = blocosMenor[i];
         }
-        somaMaior /= 5;
-        somaMenor /= 5;
-        blocosDivisor = (somaMaior + somaMenor)/2;
+
+        blocosDivisor = (Maior + Menor)/2;
+        parent.mLogger.Logar("-> Maior: " + Maior + " Menor: "  + Menor + " Media: " + blocosDivisor);
+//        String msg = "";
+//        for(i = 0; i < 5; i++){
+//            msg += blocosMaior[i] + " _ " ;
+//        }
+//        parent.mLogger.Logar("Maiores: " + msg);
+//        msg = "";
+//        for(i = 0; i < 5; i++){
+//            somaMenor += blocosMenor[i];
+//            msg += blocosMenor[i] + " _ ";
+//        }
+//        parent.mLogger.Logar("Menores " + msg);
+
+
         isCalibrando = false;
         isCalibrado = true;
         calibrarContador = 0;
+        zerarCalibrar();
         parent.mLogger.Logar("Ok! Calibrado, divisor = " + blocosDivisor);
+
     }
 
     public int isPreto(int k){
@@ -262,7 +289,14 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         }
 
         if(v == mBloco2){
-            parent.mBluetooth.enviarMsg("3@17@1#");
+            parent.runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    parent.mLogger.Logar("Encruzlihada: " + parent.mRobo.pedirValor("3@19@1#", 1));
+                }
+            });
+
         }
 
         if(v == mBloco3){

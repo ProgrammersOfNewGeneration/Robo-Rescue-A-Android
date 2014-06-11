@@ -116,11 +116,15 @@ public class BluetoothRobo extends Thread {
                     buffer[i] = '\0';
 
                     final String msg = new String(buffer);
+
+                    recebeuMsg(msg.trim());
                     parent.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             parent.mLogger.Logar("[Blue]:" + msg);
-                            recebeuMsg(msg);
+
+
+
                         }
                     });
 
@@ -133,8 +137,15 @@ public class BluetoothRobo extends Thread {
 
     public void recebeuMsg(String msg){
         try {
+
             int id = Integer.valueOf(msg.split("@")[0]);
             mMensgens.set(id, msg);
+
+            try {
+                this.notify();
+            }catch (IllegalMonitorStateException e){
+                //
+            }
         } catch (Exception e){
             LogarErro("-> Erro ao receber msg: " + e.getMessage());
         }

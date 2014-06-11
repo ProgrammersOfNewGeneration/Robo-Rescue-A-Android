@@ -1,8 +1,10 @@
 package com.aronbordin.robo.camera;
 
 import android.app.Activity;
+import android.content.Context;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,13 +19,18 @@ public class MainActivity extends Activity {
     public CameraRobo mPreview;
     public BluetoothRobo mBluetooth;
     private FrameLayout mFrameCamera;
-    private Robo mRobo;
+    public Robo mRobo;
     public Logger mLogger;
     private MainActivity self;
+    protected PowerManager.WakeLock mWakeLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         self = this;
+        final PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+        mWakeLock  = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "Tag");
+        mWakeLock.acquire();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mLogger = new Logger((TextView)findViewById(R.id.txtLogger), (ScrollView)findViewById(R.id.scrollTxtLogger));
@@ -55,6 +62,12 @@ public class MainActivity extends Activity {
         mLogger.Logar("->Ok! Objetos criados!");
     }
 
+    @Override
+    public void onDestroy(){
+        mWakeLock.release();
+        super.onDestroy();
+    }
+    
     protected void createCamera(){
         try{
             mCamera = Camera.open(0);
