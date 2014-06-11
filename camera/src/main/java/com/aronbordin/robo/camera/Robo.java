@@ -68,9 +68,6 @@ public class Robo extends Thread{
             seguirLinha();
             chamarFuncao();
         }
-        if(isEncruzilhada){
-            Logar("olá");
-        }
     }
 
     private void seguirLinha(){
@@ -81,13 +78,20 @@ public class Robo extends Thread{
             c = c*2 + mCameraPreview.isPreto(i);
 
         switch (c) {
-            case 24:
-            case 25:
-            case 26:
-            case 27:
-            case 28:
-            case 29:
-            case 30://## encruzilhgadas!!!!
+            case 0:
+                Logar("->Gap...");
+                cmd = "3@4#";
+                mFuncoes.add(cmd);
+            break;
+//            case 24:
+//            case 25:
+//            case 26:
+//            case 27:
+//            case 28:
+//            case 29:
+//            case 30://## encruzilhgadas!!!!
+            case 7:
+            case 15:
             case 31://##
                 Logar("->Encruzilhada!!");
                 new Thread() {
@@ -124,8 +128,8 @@ public class Robo extends Thread{
             case 3:
             case 5: //##
             case 6:
-            case 7:
-            case 15:
+         //   case 7:
+          //  case 15:
             case 23://##
                 Logar("->Virar Direita!!");
                 cmd = "3@5#";

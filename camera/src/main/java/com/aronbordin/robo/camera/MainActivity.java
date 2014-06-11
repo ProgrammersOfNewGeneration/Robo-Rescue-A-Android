@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
         mWakeLock.release();
         super.onDestroy();
     }
-    
+
     protected void createCamera(){
         try{
             mCamera = Camera.open(0);
