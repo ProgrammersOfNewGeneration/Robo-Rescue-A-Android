@@ -21,6 +21,7 @@ public class Robo extends Thread{
     private List<String> mFuncoes = new ArrayList<String>();
     private long interacao = 0;
     private int msgPedida = 0;
+    private String ultimaMsg = "";
 
 
     public Robo(MainActivity p){
@@ -55,7 +56,7 @@ public class Robo extends Thread{
             while(true) {
                 if(isRodando)
                     Loop();
-                sleep(30);
+                sleep(20);
             }
         } catch (Exception e){
             LogarErro("Erro de execução: " + e.getMessage());
@@ -83,7 +84,10 @@ public class Robo extends Thread{
             case 0:
                 Logar("->Gap...");
                 cmd = "3@4#";
-                mFuncoes.add(cmd);
+                if(!ultimaMsg.equals(cmd)) {
+                    mFuncoes.add(cmd);
+                    ultimaMsg = cmd;
+                }
             break;
 //            case 24:
 //            case 25:
@@ -98,10 +102,16 @@ public class Robo extends Thread{
                 Logar("->Encruzilhada!!");
                 new Thread() {
                     public void run() {
-                        isEncruzilhada = true;
-                        String cmd = "3@19@" + msgPedida + "#";//frente
-                        Logar("-->Encruzilhada:  - >" + pedirValor(cmd, msgPedida++));
-                        isEncruzilhada = false;
+                        try {
+                            isEncruzilhada = true;
+                            String cmd = "3@19@" + msgPedida + "#";//frente
+                            Logar("-->Encruzilhada:  - >" + pedirValor(cmd, msgPedida++));
+                            isEncruzilhada = false;
+                            this.stop();
+                            this.destroy();
+                        } catch (Exception e){
+                            Thread.currentThread().interrupt();
+                        }
                     }
                 }.start();
 
@@ -117,13 +127,19 @@ public class Robo extends Thread{
             case 22:
                 Logar("->Virar Esquerda!");
                 cmd = "3@7#";
-                mFuncoes.add(cmd);
+                if(!ultimaMsg.equals(cmd)) {
+                    mFuncoes.add(cmd);
+                    ultimaMsg = cmd;
+                }
                 break;
             case 4:
             case 14://##
                 Logar("->ir Frente!!");
                 cmd = "3@4#";
-                mFuncoes.add(cmd);
+                if(!ultimaMsg.equals(cmd)) {
+                    mFuncoes.add(cmd);
+                    ultimaMsg = cmd;
+                }
                 break;
             case 1:
             case 2:
@@ -135,12 +151,27 @@ public class Robo extends Thread{
             case 23://##
                 Logar("->Virar Direita!!");
                 cmd = "3@5#";
-                mFuncoes.add(cmd);
+                if(!ultimaMsg.equals(cmd)) {
+                    mFuncoes.add(cmd);
+                    ultimaMsg = cmd;
+                }
                 break;
         }
 
-        if((interacao % 10) == 0)
-            checarDistancia();
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    if ((interacao % 10) == 0)
+                        checarDistancia();
+                    this.stop();
+                    this.destroy();
+                } catch (Exception e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }.start();
+
     }
 
     private void checarDistancia(){
@@ -152,12 +183,17 @@ public class Robo extends Thread{
         if((dist<20) && (dist >= 5)){
             isDesviando = true;
 
-            new Thread(new Runnable() {
-                @Override
+            new Thread(){
                 public void run() {
-                    Desviar();
+                    try {
+                        Desviar();
+                        this.stop();
+                        this.destroy();
+                    } catch (Exception e) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
-            }).start();
+            }.start();
 
         }
     }
@@ -278,6 +314,7 @@ public class Robo extends Thread{
             }
         });
     }
+
     public void chamarFuncao(){
         Iterator i = mFuncoes.iterator();
         while(i.hasNext()){
