@@ -37,7 +37,6 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
     private boolean isFlashOn = false;
     private SurfaceHolder mHolder;
     private Camera mCamera;
-    private int mImageRGB[] = new int[mResolucaoHeight*mResolucaoWidth];
     private MainActivity parent;
     private FrameLayout mBloco0, mBloco1, mBloco2, mBloco3, mBloco4;
     private List<FrameLayout> mBlocos = new ArrayList<FrameLayout>();
