@@ -1,0 +1,162 @@
+\hypertarget{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo}{\section{com.\+aronbordin.\+robo.\+camera.\+Camera\+Robo Class Reference}
+\label{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo}\index{com.\+aronbordin.\+robo.\+camera.\+Camera\+Robo@{com.\+aronbordin.\+robo.\+camera.\+Camera\+Robo}}
+}
+Inheritance diagram for com.\+aronbordin.\+robo.\+camera.\+Camera\+Robo\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.068702cm]{d6/dc1/classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a2dcd4415d9acc0de33e6bed7cc843c6e}{void {\bfseries surface\+Created} (Surface\+Holder surface\+Holder)}\label{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a2dcd4415d9acc0de33e6bed7cc843c6e}
+
+\item 
+\hypertarget{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a88bfbd15922bb82b51cc33f0d401c602}{void {\bfseries surface\+Changed} (Surface\+Holder surface\+Holder, int i, int i2, int i3)}\label{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a88bfbd15922bb82b51cc33f0d401c602}
+
+\item 
+\hypertarget{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_afd381329a45a7ee2ad06e47d0b917e3c}{void {\bfseries surface\+Destroyed} (Surface\+Holder surface\+Holder)}\label{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_afd381329a45a7ee2ad06e47d0b917e3c}
+
+\item 
+void \hyperlink{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a0ccae659a8cdca149c700c82480a69dd}{on\+Preview\+Frame} (byte\mbox{[}$\,$\mbox{]} data, Camera camera)
+\item 
+int \hyperlink{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_aa4a9a1f4266f8706f7ce0f7db77fa1ad}{is\+Preto} (int k)
+\item 
+int \hyperlink{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_ac34a9602b2ee4d84d1b3deb016b932ef}{is\+Branco} (int k)
+\item 
+boolean \hyperlink{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a290f5d43c351368627e558213a873fb3}{on\+Touch} (View v, Motion\+Event event)
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a704dc5a516ffce7a2eac4e421469163e}{zerar\+Calibrar} ()
+\item 
+void \hyperlink{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_ae0899639ec813e5e16cc88b5a105acdd}{Calibrar} ()
+\item 
+void \hyperlink{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_adcbe43b99dd1a3e9ef9133ddfc890b0e}{Calibrar\+Fim} ()
+\item 
+\hypertarget{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a1ddfd5a73b58dc9330c03ffb661420cc}{void {\bfseries on\+Draw} (Canvas canvas)}\label{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a1ddfd5a73b58dc9330c03ffb661420cc}
+
+\item 
+void \hyperlink{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_ac95f2722132d4dd85d7bca5b9cd9ce7b}{decode\+Y\+U\+V420\+S\+P} (int\mbox{[}$\,$\mbox{]} rgb, byte\mbox{[}$\,$\mbox{]} yuv420sp, int width, int height)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Created by neo on 06/06/14. \begin{DoxyAuthor}{Author}
+Aron Bordin \href{mailto:aron.bordin@gmail.com}{\tt aron.\+bordin@gmail.\+com} Classe para gerenciar a camera do robô. Irá analisar as imagens, e contém helpers para ler seu conteúdo 
+\end{DoxyAuthor}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_ae0899639ec813e5e16cc88b5a105acdd}{\index{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}!Calibrar@{Calibrar}}
+\index{Calibrar@{Calibrar}!com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}}
+\subsubsection[{Calibrar}]{\setlength{\rightskip}{0pt plus 5cm}void com.\+aronbordin.\+robo.\+camera.\+Camera\+Robo.\+Calibrar (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}}\label{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_ae0899639ec813e5e16cc88b5a105acdd}
+Calibra a camera com o ambiente \hypertarget{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_adcbe43b99dd1a3e9ef9133ddfc890b0e}{\index{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}!Calibrar\+Fim@{Calibrar\+Fim}}
+\index{Calibrar\+Fim@{Calibrar\+Fim}!com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}}
+\subsubsection[{Calibrar\+Fim}]{\setlength{\rightskip}{0pt plus 5cm}void com.\+aronbordin.\+robo.\+camera.\+Camera\+Robo.\+Calibrar\+Fim (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}}\label{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_adcbe43b99dd1a3e9ef9133ddfc890b0e}
+Termina a calibração, analisando os dados coletados e gerando os novos limites \hypertarget{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_ac95f2722132d4dd85d7bca5b9cd9ce7b}{\index{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}!decode\+Y\+U\+V420\+S\+P@{decode\+Y\+U\+V420\+S\+P}}
+\index{decode\+Y\+U\+V420\+S\+P@{decode\+Y\+U\+V420\+S\+P}!com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}}
+\subsubsection[{decode\+Y\+U\+V420\+S\+P}]{\setlength{\rightskip}{0pt plus 5cm}void com.\+aronbordin.\+robo.\+camera.\+Camera\+Robo.\+decode\+Y\+U\+V420\+S\+P (
+\begin{DoxyParamCaption}
+\item[{int\mbox{[}$\,$\mbox{]}}]{rgb, }
+\item[{byte\mbox{[}$\,$\mbox{]}}]{yuv420sp, }
+\item[{int}]{width, }
+\item[{int}]{height}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}}\label{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_ac95f2722132d4dd85d7bca5b9cd9ce7b}
+Converte o formato da imagem 
+\begin{DoxyParams}{Parameters}
+{\em rgb} & \\
+\hline
+{\em yuv420sp} & \\
+\hline
+{\em width} & \\
+\hline
+{\em height} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_ac34a9602b2ee4d84d1b3deb016b932ef}{\index{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}!is\+Branco@{is\+Branco}}
+\index{is\+Branco@{is\+Branco}!com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}}
+\subsubsection[{is\+Branco}]{\setlength{\rightskip}{0pt plus 5cm}int com.\+aronbordin.\+robo.\+camera.\+Camera\+Robo.\+is\+Branco (
+\begin{DoxyParamCaption}
+\item[{int}]{k}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_ac34a9602b2ee4d84d1b3deb016b932ef}
+Testa se o bloco desejado é branco 
+\begin{DoxyParams}{Parameters}
+{\em k} & I\+D do bloco, de 0 à 4 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 se igual a branco, 0 se preto 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_aa4a9a1f4266f8706f7ce0f7db77fa1ad}{\index{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}!is\+Preto@{is\+Preto}}
+\index{is\+Preto@{is\+Preto}!com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}}
+\subsubsection[{is\+Preto}]{\setlength{\rightskip}{0pt plus 5cm}int com.\+aronbordin.\+robo.\+camera.\+Camera\+Robo.\+is\+Preto (
+\begin{DoxyParamCaption}
+\item[{int}]{k}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_aa4a9a1f4266f8706f7ce0f7db77fa1ad}
+Testa se o bloco desejado é preto 
+\begin{DoxyParams}{Parameters}
+{\em k} & I\+D do bloco, de 0 à 4 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 se igual a preto, 0 se branco 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a0ccae659a8cdca149c700c82480a69dd}{\index{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}!on\+Preview\+Frame@{on\+Preview\+Frame}}
+\index{on\+Preview\+Frame@{on\+Preview\+Frame}!com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}}
+\subsubsection[{on\+Preview\+Frame}]{\setlength{\rightskip}{0pt plus 5cm}void com.\+aronbordin.\+robo.\+camera.\+Camera\+Robo.\+on\+Preview\+Frame (
+\begin{DoxyParamCaption}
+\item[{byte\mbox{[}$\,$\mbox{]}}]{data, }
+\item[{Camera}]{camera}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a0ccae659a8cdca149c700c82480a69dd}
+Callback chamado a cada novo frame da camera 
+\begin{DoxyParams}{Parameters}
+{\em data} & array de bytes, onde cada byte representa um pixel \\
+\hline
+{\em camera} & objeto camera \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a290f5d43c351368627e558213a873fb3}{\index{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}!on\+Touch@{on\+Touch}}
+\index{on\+Touch@{on\+Touch}!com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}}
+\subsubsection[{on\+Touch}]{\setlength{\rightskip}{0pt plus 5cm}boolean com.\+aronbordin.\+robo.\+camera.\+Camera\+Robo.\+on\+Touch (
+\begin{DoxyParamCaption}
+\item[{View}]{v, }
+\item[{Motion\+Event}]{event}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a290f5d43c351368627e558213a873fb3}
+Gerencia os toques na tela 
+\begin{DoxyParams}{Parameters}
+{\em v} & Vie \\
+\hline
+{\em event} & Evnto \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True se o evento foi analisado 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a704dc5a516ffce7a2eac4e421469163e}{\index{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}!zerar\+Calibrar@{zerar\+Calibrar}}
+\index{zerar\+Calibrar@{zerar\+Calibrar}!com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo@{com\+::aronbordin\+::robo\+::camera\+::\+Camera\+Robo}}
+\subsubsection[{zerar\+Calibrar}]{\setlength{\rightskip}{0pt plus 5cm}void com.\+aronbordin.\+robo.\+camera.\+Camera\+Robo.\+zerar\+Calibrar (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}}\label{classcom_1_1aronbordin_1_1robo_1_1camera_1_1CameraRobo_a704dc5a516ffce7a2eac4e421469163e}
+Limpa os dados calibrados 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+aronbordin/robo/camera/Camera\+Robo.\+java\end{DoxyCompactItemize}

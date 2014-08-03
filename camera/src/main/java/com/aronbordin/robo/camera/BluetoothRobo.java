@@ -17,6 +17,8 @@ import java.util.UUID;
 
 /**
  * Created by neo on 08/06/14.
+ * @author Aron Bordin <aron.bordin@gmail.com>
+ * Classe para gerenciar conexão bluetooth.
  */
 public class BluetoothRobo extends Thread {
     private BluetoothAdapter mBlueAdapter = null;
@@ -31,7 +33,12 @@ public class BluetoothRobo extends Thread {
     private String roboNome;
     private List<String> mMensgens = new ArrayList<String>();
 
-
+    /**
+     * Construtor público. Irá testar os dispositivos pareados para fazer a conexão.
+     * Caso encontre algum problema, irá mostrar as informações no log
+     * @param p parent - Classe principal da aplicação, a MainActiviry
+     * @param Nome Nome do robô para realizar a conexão
+     */
     BluetoothRobo(MainActivity p, String Nome){
         try {
             for(int i = 0; i < 2048; i++){
@@ -76,10 +83,19 @@ public class BluetoothRobo extends Thread {
 
     }
 
+    /**
+     * Construtor público. Irá testar os dispositivos pareados para fazer a conexão.
+     * Caso encontre algum problema, irá mostrar as informações no log.
+     * Irá usar o nome Robo1-TCC como padrão para a conexão
+     * @param p parent - Classe principal da aplicação, a MainActiviry
+     */
     BluetoothRobo(MainActivity p){
         this(p, "Robo1-TCC");
     }
 
+    /**
+     * Realiza a conexão com o robo via bluetooth. Caso tenha algum problema, informa no log.
+     */
     public void Conectar(){
         if(!encontrouRobo)
             return;
@@ -101,6 +117,11 @@ public class BluetoothRobo extends Thread {
         }
     }
 
+    /**
+     * Inicia o Thread para ficar checando se novas mensagens chegaram.
+     * Não use essa função!! Ela será usada internamente pela classe,
+     * caso seja utilizada em outro local, não irá funcionar
+     */
     public void run(){
 
         while (true) {
@@ -135,7 +156,11 @@ public class BluetoothRobo extends Thread {
         }
     }
 
-    public void recebeuMsg(String msg){
+    /**
+     * Callback do Thread, informando que recebeu uma nova mensagem
+     * @param msg Mensagem recebida
+     */
+    private void recebeuMsg(String msg){
         try {
 
             int id = Integer.valueOf(msg.split("@")[0]);
@@ -151,6 +176,11 @@ public class BluetoothRobo extends Thread {
         }
     }
 
+    /**
+     * Testa se a mensage foi recebida de acordo com o ID do pedido
+     * @param i ID da Mensagem
+     * @return boolean, indicando se a mensagem foi recebida
+     */
     public boolean hasMensagem(int i){
         try{
             String s = mMensgens.get(i);
@@ -163,10 +193,19 @@ public class BluetoothRobo extends Thread {
         }
     }
 
+    /**
+     * Retorna uma mensagem por id. Caso a mensagem não existe, será retornada uma string vazia
+     * @param i ID da Mensagem
+     * @return
+     */
     public String getMensagem(int i){
         return mMensgens.get(i);
     }
 
+    /**
+     * Método para enviar mensagem por bluetooth
+     * @param msg Mensagem a ser enviada
+     */
     public void enviarMsg(String msg){
         try {
             if(conectado) {
@@ -178,6 +217,7 @@ public class BluetoothRobo extends Thread {
             LogarErro("->Erro ao enviar mensagem: " + e.getMessage());
         }
     }
+
 
     private void Logar(String msg){
         final String log = msg;

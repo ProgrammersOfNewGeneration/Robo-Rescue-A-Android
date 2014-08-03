@@ -2,16 +2,16 @@
 <pre-dex-items>
 
     <item
-        dex="/home/neo/AndroidStudioProjects/Robo/camera/build/intermediates/pre-dexed/debug/classes-7115a6308ef600e9aa727156dd9f6e287315a6f9.jar"
-        jar="/home/neo/AndroidStudioProjects/Robo/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.1.0/classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28"/>
-    <item
-        dex="/home/neo/AndroidStudioProjects/Robo/camera/build/intermediates/pre-dexed/debug/support-v4-19.1.0-d1ff72aceb4c6b94df8f24044883f6ad8e3dacff.jar"
-        jar="/home/neo/Android/android-studio/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        dex="/home/neo/Programacao/AndroidStudioProjects/Robo/camera/build/intermediates/pre-dexed/debug/support-v4-19.1.0-95a363f7fadad141ffe290eb5375030e031abdb4.jar"
+        jar="/opt/android-sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
+    <item
+        dex="/home/neo/Programacao/AndroidStudioProjects/Robo/camera/build/intermediates/pre-dexed/debug/classes-dab2751ccab496d11e7e2f3ce1b13f17c70ca928.jar"
+        jar="/home/neo/Programacao/AndroidStudioProjects/Robo/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.1.0/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28"/>
 
 </pre-dex-items>

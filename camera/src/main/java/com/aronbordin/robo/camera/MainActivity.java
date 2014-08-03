@@ -13,7 +13,10 @@ import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-
+/**
+ * @author Aron Bordin <aron.bordin@gmail.com>
+ * Classe principal, irá iniciar o UI e depois a lógica
+ */
 public class MainActivity extends Activity {
     private Camera mCamera = null;
     public CameraRobo mPreview;
@@ -24,6 +27,11 @@ public class MainActivity extends Activity {
     private MainActivity self;
     protected PowerManager.WakeLock mWakeLock;
 
+    /**
+     * Ao ser criado, inicia todos os objetos do projeto e realiza a conexão
+     * Caso tenha algum problema, informa no log     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         self = this;
@@ -68,6 +76,9 @@ public class MainActivity extends Activity {
         super.onDestroy();
     }
 
+    /**
+     * Cria o objeto camera, pegando a camera padrão do sistema e rotacionando corretamente
+     */
     protected void createCamera(){
         try{
             mCamera = Camera.open(0);
@@ -79,10 +90,17 @@ public class MainActivity extends Activity {
         }
     }
 
+
+    /**
+     * Método para iniciar a execução do rob^o
+     */
     public void iniciarRobo(){
         mRobo.IniciarRobo();
     }
 
+    /**
+     * Método para parar o execução do robô
+     */
     public void pararRobo(){
         mRobo.PararRobo();
     }

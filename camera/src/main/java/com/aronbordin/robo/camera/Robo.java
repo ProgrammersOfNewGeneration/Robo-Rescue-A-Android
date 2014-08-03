@@ -8,6 +8,9 @@ import java.util.List;
 
 /**
  * Created by neo on 08/06/14.
+ * @author Aron Bordin <aron.bordin@gmail.com>
+ * Classe com toda a lógica do projeto.
+ * Irá ler os dados via bluetooth, tomar decisões e movimentar o robô
  */
 public class Robo extends Thread{
     private CameraRobo mCameraPreview;
@@ -24,13 +27,26 @@ public class Robo extends Thread{
     private String ultimaMsg = "";
 
 
+    /**
+     * Construtor do objeto.
+     * @param p parent = MainActivity
+     */
     public Robo(MainActivity p){
         parent = p;
         mCameraPreview = p.mPreview;
         mBluetoothRobo = p.mBluetooth;
         mLogger = p.mLogger;
+        try {
+            this.start();
+        } catch (Exception e){
+            //
+
+        }
     }
 
+    /**
+     * Método para iniciar a execução do robô
+     */
     public void IniciarRobo(){
         if(!isRodando) {
             isRodando = true;
@@ -38,15 +54,13 @@ public class Robo extends Thread{
             isDesviando = false;
             ultimaMsg = "";
             isEncruzilhada = false;
-            try {
-                this.start();
-            } catch (Exception e){
-                //
-            }
             Logar("->Iniciando robô");
         }
     }
 
+    /**
+     * Método para parar a execução do robô
+     */
     public void PararRobo(){
         if(isRodando) {
             isRodando = false;
@@ -57,11 +71,16 @@ public class Robo extends Thread{
         }
     }
 
+    /**
+     * Thread para manter o robô em execução
+     * Nunca chame esse método!! Usado internamente para manter o robô em execução
+     */
     @Override
     public void run(){
         try{
-            while(isRodando) {
-                Loop();
+            while(true) {
+                if(isRodando)
+                    Loop();
                 sleep(20);
             }
         } catch (Exception e){
@@ -69,7 +88,11 @@ public class Robo extends Thread{
         }
     }
 
-    public void Loop(){
+    /**
+     * Loop principal do robô
+     * Executado a cada 20 ms
+     */
+    protected void Loop(){
         interacao++;
         if((isSeguindoLinha) && (!isEncruzilhada) && (!isDesviando)){
             seguirLinha();
@@ -78,6 +101,10 @@ public class Robo extends Thread{
 
     }
 
+    /**
+     * Lógica para seguir linha.
+     * Irá analisar a camera e tomar as decisões
+     */
     private void seguirLinha(){
         int c = 0, i;
         String cmd;
@@ -112,6 +139,7 @@ public class Robo extends Thread{
                             String cmd = "3@19@" + msgPedida + "#";//frente
                             Logar("-->Encruzilhada:  - >" + pedirValor(cmd, msgPedida++));
                             isEncruzilhada = false;
+                            mFuncoes.clear();
 //                            this.stop();
 //                            this.destroy();
                         } catch (Exception e){
@@ -161,13 +189,19 @@ public class Robo extends Thread{
                     ultimaMsg = cmd;
                 }
                 break;
-//            case 28:
+            case 28:
 //                Logar("->Esquerda 90");
 //                mFuncoes.add("3@4#");
 //                mFuncoes.add("3@18@750#");
 //                mFuncoes.add("3@8#");
 //                mFuncoes.add("3@18@500#");
 //                ultimaMsg = "3@18@500#";
+                isEncruzilhada = true;
+                cmd = "3@23@" + msgPedida + "#";//frente
+                Logar("-->Encruzilhada:  - >" + pedirValor(cmd, msgPedida++));
+                isEncruzilhada = false;
+                mFuncoes.clear();
+
         }
 
         new Thread() {
@@ -186,6 +220,9 @@ public class Robo extends Thread{
 
     }
 
+    /**
+     * Irá ler o ultrassom e testar se existe um obstáculo
+     */
     private void checarDistancia(){
         int dist = getDistancia();
         if((dist<20) && (dist >= 5)){
@@ -206,6 +243,10 @@ public class Robo extends Thread{
         }
     }
 
+    /**
+     * Helper para pedir ao robô a distancia atual
+     * @return
+     */
     private int getDistancia(){
         String msg = "3@17@" + String.valueOf(msgPedida) + "#";
         String valor;
@@ -214,7 +255,10 @@ public class Robo extends Thread{
         return Integer.valueOf(valor);
     }
 
-    public void DesviarNovo(){
+    /**
+     * Helper para desviar de obstáculo
+     */
+    protected void DesviarNovo(){
         Logar("->Desviando.......");
         mFuncoes.clear();
         mFuncoes.add("3@6#");//direita forte
@@ -231,87 +275,106 @@ public class Robo extends Thread{
         chamarFuncao();
     }
 
+    /**
+     * Helper para desviar de obstáculo
+     */
     public void Desviar(){
-        Logar("->Desviando...");
-        mFuncoes.clear();
-        //girando para a direita e iniciando desvio
-        mFuncoes.add("3@22@180#"); //gira sendor 90º = esquerda
-        mFuncoes.add("3@6#"); //direita forte
-        mFuncoes.add("3@18@1500#"); //delay(1000)
-
-        //girou direita, irá para frente
-        mFuncoes.add("3@4#"); //ir frente
-        chamarFuncao();
-        String foi = pedirValor("3@666@" + msgPedida + "#", msgPedida++);
-        Logar("\t\tPassando obstáculo...");
-        while(getDistancia() < 30){ //frente até passar o obstaculo
-            try {
-                sleep(100);
-            } catch (InterruptedException e){
-                //
-            }
-        }
-        Logar("\t\tVirando...");
-        mFuncoes.clear();
-        mFuncoes.add("3@4#");//andar mais um pouco, por seguranca
-        mFuncoes.add("3@18@2000#");
-        //inicia girar esquerda para passar pelo obstaculo
-        mFuncoes.add("3@8#");//esqueda forte
-        mFuncoes.add("3@18@1500#"); //delay
-        //girou, anda frente até passar obstáculo
-        mFuncoes.add("3@4#");
-        chamarFuncao();
-        foi = pedirValor("3@666@" + msgPedida + "#", msgPedida++);
-        while(getDistancia() > 30)//anda até estar alinhado com o obstaculo
-        {
-            try {
-                sleep(100);
-            } catch (InterruptedException e){
-                //
-            }
-        }
-
-        while(getDistancia() < 30){//já encontrou, agr qdo for maior q 30 ele já ultrapassou o obs
-            try{
-                sleep(100);
-            } catch (InterruptedException e){
-                //
-            }
-        }
-
-        mFuncoes.clear();
-        mFuncoes.add("3@4#");//ir mais para frente
-        mFuncoes.add("3@18@1500#"); //delay
-
-        //virar esquerda pra voltar linha
-        mFuncoes.add("3@8#");
-        mFuncoes.add("3@18@1000#");//delay
-        mFuncoes.add("3@4#"); //anda frente
-        chamarFuncao();
-        foi = pedirValor("3@666@" + msgPedida + "#", msgPedida++);
-        while (mCameraPreview.isPreto(2) == 0){//anda reto até achar a linha
-            try{
-                sleep(50);
-            } catch(InterruptedException e){
-                //
-            }
-        }
-        //vira direita para voltar na pista
-        mFuncoes.add("3@6#");//direita forte
-        mFuncoes.add("3@18@750#");
-        mFuncoes.add("3@22@90#");
-        chamarFuncao();
-        foi = pedirValor("3@666@" + msgPedida + "#", msgPedida++);
+        isDesviando = true;
+        String cmd = "3@24@" + msgPedida + "#";//frente
+        Logar("-->Desviar:  - >" + pedirValor(cmd, msgPedida++));
         isDesviando = false;
+
+//        Logar("->Desviando...");
+//        mFuncoes.clear();
+//        //girando para a direita e iniciando desvio
+//        mFuncoes.add("3@22@180#"); //gira sendor 90º = esquerda
+//        mFuncoes.add("3@6#"); //direita forte
+//        mFuncoes.add("3@18@1500#"); //delay(1000)
+//
+//        //girou direita, irá para frente
+//        mFuncoes.add("3@4#"); //ir frente
+//        chamarFuncao();
+//        String foi = pedirValor("3@666@" + msgPedida + "#", msgPedida++);
+//        Logar("\t\tPassando obstáculo...");
+//        while(getDistancia() < 30){ //frente até passar o obstaculo
+//            try {
+//                sleep(100);
+//            } catch (InterruptedException e){
+//                //
+//            }
+//        }
+//        Logar("\t\tVirando...");
+//        mFuncoes.clear();
+//        mFuncoes.add("3@4#");//andar mais um pouco, por seguranca
+//        mFuncoes.add("3@18@2000#");
+//        //inicia girar esquerda para passar pelo obstaculo
+//        mFuncoes.add("3@8#");//esqueda forte
+//        mFuncoes.add("3@18@1500#"); //delay
+//        //girou, anda frente até passar obstáculo
+//        mFuncoes.add("3@4#");
+//        chamarFuncao();
+//        foi = pedirValor("3@666@" + msgPedida + "#", msgPedida++);
+//        while(getDistancia() > 30)//anda até estar alinhado com o obstaculo
+//        {
+//            try {
+//                sleep(100);
+//            } catch (InterruptedException e){
+//                //
+//            }
+//        }
+//
+//        while(getDistancia() < 30){//já encontrou, agr qdo for maior q 30 ele já ultrapassou o obs
+//            try{
+//                sleep(100);
+//            } catch (InterruptedException e){
+//                //
+//            }
+//        }
+//
+//        mFuncoes.clear();
+//        mFuncoes.add("3@4#");//ir mais para frente
+//        mFuncoes.add("3@18@1500#"); //delay
+//
+//        //virar esquerda pra voltar linha
+//        mFuncoes.add("3@8#");
+//        mFuncoes.add("3@18@1000#");//delay
+//        mFuncoes.add("3@4#"); //anda frente
+//        chamarFuncao();
+//        foi = pedirValor("3@666@" + msgPedida + "#", msgPedida++);
+//        while (mCameraPreview.isPreto(2) == 0){//anda reto até achar a linha
+//            try{
+//                sleep(50);
+//            } catch(InterruptedException e){
+//                //
+//            }
+//        }
+//        //vira direita para voltar na pista
+//        mFuncoes.add("3@6#");//direita forte
+//        mFuncoes.add("3@18@750#");
+//        mFuncoes.add("3@22@90#");
+//        chamarFuncao();
+//        foi = pedirValor("3@666@" + msgPedida + "#", msgPedida++);
+//        isDesviando = false;
     }
 
+    /**
+     * Método para enviar uma mensagem ao robô e esperar um retorno
+     * @param msg Mensagem a ser enviada
+     * @param id ID do pedido, para identifiar a mensagem posteriormente
+     * @return String com o valor pedido
+     */
     public String pedirValor(String msg, int id){
-        synchronized (mBluetoothRobo) {
+       synchronized (mBluetoothRobo) {
             mBluetoothRobo.enviarMsg(msg);
+        int k = 0;
 
             while (!mBluetoothRobo.hasMensagem(id))
                 try {
                     mBluetoothRobo.wait(10);
+                    if(k++ > 10000){
+//                        mBluetoothRobo.notify();
+                        return "-6676";
+                    }
                 } catch (InterruptedException e) {
                     LogarErro(e.getMessage());
                 }
@@ -321,6 +384,7 @@ public class Robo extends Thread{
         retorno = retorno.split("@")[1];
         return  retorno;
     }
+
 
     private void Logar(String msg){
         final String log = msg;
@@ -342,7 +406,11 @@ public class Robo extends Thread{
         });
     }
 
-    public void chamarFuncao(){
+    /**
+     * Irá enviar todas as funções na fila por bluetooth.
+     * Após enviar as mensagems, irá limpar a fila
+     */
+    private void chamarFuncao(){
         Iterator i = mFuncoes.iterator();
         while(i.hasNext()){
             String f = (String)i.next();

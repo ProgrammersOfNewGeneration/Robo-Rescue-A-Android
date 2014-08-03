@@ -28,6 +28,8 @@ import java.util.List;
 
 /**
  * Created by neo on 06/06/14.
+ * @author Aron Bordin <aron.bordin@gmail.com>
+ * Classe para gerenciar a camera do robô. Irá analisar as imagens, e contém helpers para ler seu conteúdo
  */
 public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, Camera.PreviewCallback, View.OnTouchListener{
     private int mResolucaoWidth = 320, mResolucaoHeight = 240;
@@ -48,6 +50,12 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
     private int calibrarContador = 0;
 
 
+    /**
+     * Construtor do objeto. Irá iniciar a camera e mostrar o resultado na tela
+     * @param context Contextp do aplicativo
+     * @param camera Objeto camera
+     * @param p parent - Cópia do MainActivity
+     */
     CameraRobo(Context context, Camera camera, MainActivity p){
         super(context);
         parent = p;
@@ -91,6 +99,9 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
 
     }
 
+    /**
+     * Carrega os blocos de visualização para a memória, podendo acessá-los depois
+     */
     private void loadBlocos(){
         mBloco0 = (FrameLayout)parent.findViewById(R.id.frameBloco0);
         mBloco1 = (FrameLayout)parent.findViewById(R.id.frameBloco1);
@@ -134,6 +145,11 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         }
     }
 
+    /**
+     * Callback chamado a cada novo frame da camera
+     * @param data array de bytes, onde cada byte representa um pixel
+     * @param camera objeto camera
+     */
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
         if(!isRunning)
@@ -142,6 +158,7 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         if(mHolder == null)
             return;
         try{
+            //impede que esse bloco mais de uma vez ao mesmo tempo
             synchronized (mHolder){
                 int i, k, j = 5;
                 for (i = 0; i < 5; i++) {
@@ -197,6 +214,10 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         }
     }
 
+
+    /**
+     * Limpa os dados calibrados
+     */
     protected  void zerarCalibrar(){
         for(int i = 0; i < 5; i++){
             blocosMenor[i] = 1000;
@@ -205,6 +226,9 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
 
     }
 
+    /**
+     * Calibra a camera com o ambiente
+     */
     protected void Calibrar(){
         int i;
         for(i = 0; i < 5; i++){
@@ -219,6 +243,9 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
             CalibrarFim();
     }
 
+    /**
+     * Termina a calibração, analisando os dados coletados e gerando os novos limites
+     */
     protected void CalibrarFim(){
         int Menor = 1000, Maior = -1;
         int i;
@@ -252,14 +279,30 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
 
     }
 
+    /**
+     * Testa se o bloco desejado é preto
+     * @param k ID do bloco, de 0 à 4
+     * @return 1 se igual a preto, 0 se branco
+     */
     public int isPreto(int k){
         return blocosMedia[k] < blocosDivisor ? 1 : 0;
     }
 
+    /**
+     * Testa se o bloco desejado é branco
+     * @param k ID do bloco, de 0 à 4
+     * @return 1 se igual a branco, 0 se preto
+     */
     public int isBranco(int k){
         return blocosMedia[k] > blocosDivisor ? 1 : 0;
     }
 
+    /**
+     * Gerencia os toques na tela
+     * @param v Vie
+     * @param event Evnto
+     * @return True se o evento foi analisado
+     */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if(v == mBloco0){
@@ -315,8 +358,14 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
     }
 
 
-    //  Byte decoder : ---------------------------------------------------------------------
-    void decodeYUV420SP(int[] rgb, byte[] yuv420sp, int width, int height) {
+    /**
+     * Converte o formato da imagem
+     * @param rgb
+     * @param yuv420sp
+     * @param width
+     * @param height
+     */
+    protected void decodeYUV420SP(int[] rgb, byte[] yuv420sp, int width, int height) {
         // Pulled directly from:
         // http://ketai.googlecode.com/svn/trunk/ketai/src/edu/uic/ketai/inputService/KetaiCamera.java
         final int frameSize = width * height;
