@@ -1,8 +1,10 @@
 package com.aronbordin.robo.camera;
 
+import android.provider.Settings;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,6 +28,8 @@ public class Robo extends Thread{
     private int msgPedida = 0;
     private String ultimaMsg = "";
     public Compass mCompass;
+    private long lastTime = 0;
+    private int FPS = 30;
 
 
     /**
@@ -42,9 +46,9 @@ public class Robo extends Thread{
             this.start();
         } catch (Exception e){
             //
-
         }
     }
+
 
     /**
      * Método para iniciar a execução do robô
@@ -56,6 +60,7 @@ public class Robo extends Thread{
             isDesviando = false;
             ultimaMsg = "";
             isEncruzilhada = false;
+            mCameraPreview.setIsRodando(true);
             Logar("->Iniciando robô");
         }
     }
@@ -66,6 +71,7 @@ public class Robo extends Thread{
     public void PararRobo(){
         if(isRodando) {
             isRodando = false;
+            mCameraPreview.setIsRodando(false);
             mFuncoes.clear();
             mFuncoes.add("3@10#");
             chamarFuncao();
@@ -81,12 +87,16 @@ public class Robo extends Thread{
     public void run(){
         try{
             while(true) {
+                lastTime = System.currentTimeMillis();
                 if(isRodando)
                     Loop();
-                sleep(20);
+                int tempoDelay = FPS/1000 - (int)(lastTime - System.currentTimeMillis());
+                if(tempoDelay < 0)
+                    Logar("-Alerta!!! Lentidão no processamento! Tempo perdido: " + tempoDelay*-1);
+                sleep(tempoDelay);
             }
         } catch (Exception e){
-            LogarErro("Erro de execução: " + e.getMessage());
+            LogarErro("Erro de execução: " + e.getMessage() + e.getStackTrace());
         }
     }
 
@@ -96,6 +106,11 @@ public class Robo extends Thread{
      */
     protected void Loop(){
         interacao++;
+        mCameraPreview.Processar();
+        while (true){
+            if(mCameraPreview.DadosProcessados())
+                break;
+        }
         if((isSeguindoLinha) && (!isEncruzilhada) && (!isDesviando)){
             seguirLinha();
             chamarFuncao();
@@ -150,7 +165,7 @@ public class Robo extends Thread{
             case 20:
             case 21:
             case 22:
-                cmd = "3@8#";
+                cmd = "3@7#";
                 if(!ultimaMsg.equals(cmd)) {
                     Logar("->Virar Esquerda!");
                     mFuncoes.add(cmd);
@@ -159,9 +174,9 @@ public class Robo extends Thread{
                 break;
             case 4:
             case 14://##
-                Logar("->ir Frente!!");
                 cmd = "3@4#";
                 if(!ultimaMsg.equals(cmd)) {
+                    Logar("->ir Frente!!");
                     mFuncoes.add(cmd);
                     ultimaMsg = cmd;
                 }
@@ -174,22 +189,24 @@ public class Robo extends Thread{
          //   case 7:
           //  case 15:
             case 23://##
-                cmd = "3@6#";
+                cmd = "3@5#";
                 if(!ultimaMsg.equals(cmd)) {
                     Logar("->Virar Direita!!");
                     mFuncoes.add(cmd);
                     ultimaMsg = cmd;
                 }
                 break;
-            case 28:
+           case 28:
                 Logar("->Encruzilhada!!");
                 new Thread() {
                     public void run() {
-                        Encruzilhada();
+                        EncruzilhadaInvertida();
                     }
                 }.start();
-
+               break;
         }
+        if(isDesviando || isEncruzilhada)
+            return;
 
         new Thread() {
             @Override
@@ -209,7 +226,7 @@ public class Robo extends Thread{
      */
     private void checarDistancia(){
         int dist = getDistancia();
-        if((dist<15) && (dist >= 5)){
+        if((dist<=15) && (dist >= 5)){
             Desviar();
         }
     }
@@ -225,6 +242,20 @@ public class Robo extends Thread{
         valor = valor.trim();
         return Integer.valueOf(valor);
     }
+
+    public void EncruzilhadaInvertida(){
+        isEncruzilhada = true;
+        mFuncoes.clear();
+        mFuncoes.add("3@4#");
+        mFuncoes.add("3@18@1000#");
+        mFuncoes.add("3@8#");
+        chamarFuncao();
+        esperarAngulo(70);
+        mFuncoes.add("3@4#");
+        chamarFuncao();
+        isEncruzilhada = false;
+    }
+
 
     public void Encruzilhada(){
         isEncruzilhada = true;
@@ -337,9 +368,13 @@ public class Robo extends Thread{
      */
     private void chamarFuncao(){
         Iterator i = mFuncoes.iterator();
-        while(i.hasNext()){
-            String f = (String)i.next();
-            mBluetoothRobo.enviarMsg(f);
+        try {
+            while (i.hasNext()) {
+                String f = (String) i.next();
+                mBluetoothRobo.enviarMsg(f);
+            }
+        } catch (ConcurrentModificationException e){
+            //
         }
         mFuncoes.clear();
     }

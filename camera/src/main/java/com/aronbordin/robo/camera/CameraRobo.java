@@ -48,6 +48,8 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
     private int[] blocosMaior = new int[5];
     private int blocosDivisor = 100;
     private int calibrarContador = 0;
+    private boolean podeProcessar = false;
+    private boolean isRodando = false;
 
 
     /**
@@ -152,6 +154,9 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
      */
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
+        if(!isCalibrando)
+            if(!podeProcessar && isRodando)
+                return;
         if(!isRunning)
             return;
         Canvas canvas = null;
@@ -203,6 +208,8 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
                 for(i = 0; i < 5; i++)
                     mBlocos.get(i).setBackgroundColor(blocosMedia[i] > blocosDivisor ? Color.WHITE : Color.BLACK);
 
+                if(!isCalibrando)
+                    podeProcessar = false;
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -214,7 +221,6 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         }
     }
 
-
     /**
      * Limpa os dados calibrados
      */
@@ -224,6 +230,14 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
             blocosMaior[i] = -1;
         }
 
+    }
+
+    /**
+     * Seta se o robõ está em execução
+     * @param rodando está rodando
+     */
+    public void setIsRodando(boolean rodando){
+        isRodando = rodando;
     }
 
     /**
@@ -241,6 +255,7 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         isCalibrando = true;
         if(calibrarContador == 100)
             CalibrarFim();
+
     }
 
     /**
@@ -277,6 +292,21 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         zerarCalibrar();
         parent.mLogger.Logar("Ok! Calibrado, divisor = " + blocosDivisor);
 
+    }
+
+    /**
+     * Permite o processamento de imagens
+     */
+    public void Processar(){
+        podeProcessar = true;
+    }
+
+    /**
+     * Informa se os dados já foram processados
+     * @return boolean se os dados já foram analisados
+     */
+    public boolean DadosProcessados(){
+        return !podeProcessar;
     }
 
     /**
