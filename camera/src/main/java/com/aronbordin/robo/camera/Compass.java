@@ -36,7 +36,7 @@ public class Compass implements SensorEventListener{
     public float getDirection(){
         float azimuthInDegress = (float)Math.toDegrees(mOrientation[0]);
         if (azimuthInDegress < 0.0f) {
-            azimuthInDegress += 360.0f;
+            azimuthInDegress += 180.0f;
         }
         return azimuthInDegress;
 

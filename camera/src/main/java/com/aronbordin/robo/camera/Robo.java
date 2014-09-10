@@ -106,16 +106,22 @@ public class Robo extends Thread{
      */
     protected void Loop(){
         interacao++;
+        lerCamera();
+        if((isSeguindoLinha == true) && (isEncruzilhada == false) && (isDesviando == false)){
+            seguirLinha();
+            chamarFuncao();
+        }
+    }
+
+    /**
+     * Ativa o processamento de imagens e analisa um frame
+     */
+    protected void lerCamera(){
         mCameraPreview.Processar();
         while (true){
             if(mCameraPreview.DadosProcessados())
                 break;
         }
-        if((isSeguindoLinha) && (!isEncruzilhada) && (!isDesviando)){
-            seguirLinha();
-            chamarFuncao();
-        }
-
     }
 
     /**
@@ -123,6 +129,8 @@ public class Robo extends Thread{
      * Irá analisar a camera e tomar as decisões
      */
     private void seguirLinha(){
+        if(isDesviando == true || isEncruzilhada == true)
+            return;
         int c = 0, i;
         String cmd;
 
@@ -138,13 +146,7 @@ public class Robo extends Thread{
                     ultimaMsg = cmd;
                 }
             break;
-//            case 24:
-//            case 25:
-//            case 26:
-//            case 27:
-//            case 28:
-//            case 29:
-//            case 30://## encruzilhgadas!!!!
+
             case 7:
             case 15:
             case 31://##
@@ -165,7 +167,7 @@ public class Robo extends Thread{
             case 20:
             case 21:
             case 22:
-                cmd = "3@7#";
+                cmd = "3@8#";
                 if(!ultimaMsg.equals(cmd)) {
                     Logar("->Virar Esquerda!");
                     mFuncoes.add(cmd);
@@ -189,7 +191,7 @@ public class Robo extends Thread{
          //   case 7:
           //  case 15:
             case 23://##
-                cmd = "3@5#";
+                cmd = "3@6#";
                 if(!ultimaMsg.equals(cmd)) {
                     Logar("->Virar Direita!!");
                     mFuncoes.add(cmd);
@@ -197,7 +199,7 @@ public class Robo extends Thread{
                 }
                 break;
            case 28:
-                Logar("->Encruzilhada!!");
+                Logar("->Encruzilhada Invertidat!!");
                 new Thread() {
                     public void run() {
                         EncruzilhadaInvertida();
@@ -205,7 +207,7 @@ public class Robo extends Thread{
                 }.start();
                break;
         }
-        if(isDesviando || isEncruzilhada)
+        if(isDesviando == true || isEncruzilhada == true)
             return;
 
         new Thread() {
@@ -244,15 +246,36 @@ public class Robo extends Thread{
     }
 
     public void EncruzilhadaInvertida(){
+        int c = 0, i;
         isEncruzilhada = true;
         mFuncoes.clear();
         mFuncoes.add("3@4#");
         mFuncoes.add("3@18@1000#");
-        mFuncoes.add("3@8#");
+        mFuncoes.add("3@10#");
         chamarFuncao();
-        esperarAngulo(70);
-        mFuncoes.add("3@4#");
-        chamarFuncao();
+
+        String msg = "3@666@" + String.valueOf(msgPedida) + "#";
+        String v = pedirValor(msg, msgPedida++);
+        lerCamera();
+        try{
+            sleep(200);
+        } catch (InterruptedException e){
+            //
+        }
+        for (i=0; i<5; i++)
+            c = c*2 + mCameraPreview.isPreto(i);
+
+        if(c == 0) {
+            msg = "3@23@" + String.valueOf(msgPedida) + "#";
+            v = pedirValor(msg, msgPedida++);
+            /*mFuncoes.add("3@8#");
+            chamarFuncao();
+            esperarAngulo(70);
+            mFuncoes.add("3@4#");
+            chamarFuncao();*/
+        }
+        mFuncoes.clear();
+        ultimaMsg = "";
         isEncruzilhada = false;
     }
 
@@ -260,13 +283,16 @@ public class Robo extends Thread{
     public void Encruzilhada(){
         isEncruzilhada = true;
         mFuncoes.clear();
-        mFuncoes.add("3@4#");
+        String msg = "3@19@" + String.valueOf(msgPedida) + "#";
+        String v = pedirValor(msg, msgPedida++);
+        /*mFuncoes.add("3@4#");
         mFuncoes.add("3@18@1500#");
         mFuncoes.add("3@6#");
         chamarFuncao();
         esperarAngulo(70);
         mFuncoes.add("3@4#");
-        chamarFuncao();
+        chamarFuncao();*/
+        ultimaMsg = "";
         isEncruzilhada = false;
     }
 
@@ -274,22 +300,51 @@ public class Robo extends Thread{
      * Helper para desviar de obstáculo
      */
     public void Desviar(){
+        parent.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parent.mLogger.Logar("->Desviar");
+            }
+        });
         isDesviando = true;
         mFuncoes.clear();
-        mFuncoes.add("3@6#");
+
+        String msg = "3@24@" + String.valueOf(msgPedida) + "#";
+        String v = pedirValor(msg, msgPedida++);
+
+       /* mFuncoes.add("3@6#");
         chamarFuncao();
-        esperarAngulo(70);
+        esperarAngulo(90);
+        parent.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parent.mLogger.Logar("->90 ok");
+            }
+        });
         mFuncoes.add("3@4#");
-        mFuncoes.add("3@18@3000#");
+        mFuncoes.add("3@18@2000#");
         mFuncoes.add("3@8#");
         chamarFuncao();
-        esperarAngulo(70);
+        esperarAngulo(90);
+        parent.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parent.mLogger.Logar("->Desviar");
+            }
+        });
         mFuncoes.add("3@4#");
         mFuncoes.add("3@18@5000#");
         mFuncoes.add("3@8#");
         chamarFuncao();
-        esperarAngulo(45);
+        esperarAngulo(45);*/
+        ultimaMsg = "";
         isDesviando = false;
+        parent.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parent.mLogger.Logar("->Desviar OK!");
+            }
+        });
     }
 
     /**
