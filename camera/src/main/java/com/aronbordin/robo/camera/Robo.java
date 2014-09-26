@@ -308,10 +308,38 @@ public class Robo extends Thread{
         });
         isDesviando = true;
         mFuncoes.clear();
+        mFuncoes.add("3@6#");//direita forte
+        mFuncoes.add("3@18@800#");
+        chamarFuncao();
+        String msg = "3@666@" + String.valueOf(msgPedida) + "#";
+        String valor = pedirValor(msg, msgPedida++);
 
-        String msg = "3@24@" + String.valueOf(msgPedida) + "#";
-        String v = pedirValor(msg, msgPedida++);
+        mFuncoes.add("3@4#");//frente
+        mFuncoes.add("3@18@2500#");
+        chamarFuncao();
+        msg = "3@666@" + String.valueOf(msgPedida) + "#";
+        valor = pedirValor(msg, msgPedida++);
 
+        mFuncoes.add("3@8#");//esquerda
+        mFuncoes.add("3@18@1000#");
+        chamarFuncao();
+        msg = "3@666@" + String.valueOf(msgPedida) + "#";
+        valor = pedirValor(msg, msgPedida++);
+
+        mFuncoes.add("3@4#");//frente
+        mFuncoes.add("3@18@3500#");
+        chamarFuncao();
+        msg = "3@666@" + String.valueOf(msgPedida) + "#";
+        valor = pedirValor(msg, msgPedida++);
+
+        isDesviando = false;
+
+        parent.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parent.mLogger.Logar("\t->Desviar ok");
+            }
+        });
        /* mFuncoes.add("3@6#");
         chamarFuncao();
         esperarAngulo(90);
@@ -337,14 +365,7 @@ public class Robo extends Thread{
         mFuncoes.add("3@8#");
         chamarFuncao();
         esperarAngulo(45);*/
-        ultimaMsg = "";
-        isDesviando = false;
-        parent.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                parent.mLogger.Logar("->Desviar OK!");
-            }
-        });
+
     }
 
     /**
