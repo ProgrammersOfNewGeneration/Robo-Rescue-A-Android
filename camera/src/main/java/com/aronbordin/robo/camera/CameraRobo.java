@@ -52,6 +52,7 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
     private boolean isRodando = false;
 
 
+
     /**
      * Construtor do objeto. Irá iniciar a camera e mostrar o resultado na tela
      * @param context Contextp do aplicativo
@@ -343,12 +344,17 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         }
 
         if(v == mBloco2){
-            new Thread(new Runnable() {
+            /*new Thread(new Runnable() {
                 @Override
                 public void run() {
                     parent.mRobo.Desviar();
                 }
-            }).start();
+            }).start();*/
+
+
+
+
+
 
         }
 

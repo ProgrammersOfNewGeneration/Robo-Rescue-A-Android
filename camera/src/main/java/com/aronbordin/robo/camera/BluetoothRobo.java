@@ -82,6 +82,15 @@ public class BluetoothRobo extends Thread {
         }
 
     }
+    public boolean conectado ()
+    {
+        if(mBlueSocket.isConnected())
+        {
+            return true;
+        }
+        else
+            return false;
+    }
 
     /**
      * Construtor público. Irá testar os dispositivos pareados para fazer a conexão.
@@ -116,6 +125,7 @@ public class BluetoothRobo extends Thread {
             parent.mLogger.LogarErro("\t\tErro ao conectar: " + e.getMessage());
         }
     }
+
 
     /**
      * Inicia o Thread para ficar checando se novas mensagens chegaram.
@@ -209,7 +219,15 @@ public class BluetoothRobo extends Thread {
     public void enviarMsg(String msg){
         try {
             if(conectado) {
-                mOut.write(msg.getBytes());
+                try {
+
+
+                    mOut.write(msg.getBytes());
+                }
+                catch (NullPointerException e)
+                {
+                    LogarErro("Erro -> Menssagem nula");
+                }
             //    Logar("[Blue-me]Msg enviada: " + msg);
             }
 

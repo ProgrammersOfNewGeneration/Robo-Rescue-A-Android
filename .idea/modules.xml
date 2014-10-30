@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Robo.iml" filepath="$PROJECT_DIR$/Robo.iml" />
       <module fileurl="file://$PROJECT_DIR$/camera/camera.iml" filepath="$PROJECT_DIR$/camera/camera.iml" />
+      <module fileurl="file://$PROJECT_DIR$/robo1_Android.iml" filepath="$PROJECT_DIR$/robo1_Android.iml" />
     </modules>
   </component>
 </project>
