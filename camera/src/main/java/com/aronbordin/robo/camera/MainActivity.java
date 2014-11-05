@@ -52,14 +52,14 @@ public class MainActivity extends Activity {
             mFrameCamera.addView(mPreview);
         }
 
-
-        runOnUiThread(new Runnable() {
+        conecta();
+        /*runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mBluetooth = new BluetoothRobo(self);
                 mBluetooth.Conectar();
             }
-        });
+        });*/
 
         mLogger.Logar("\t\tCriando robô...");
         mRobo = new Robo(this);
@@ -68,6 +68,17 @@ public class MainActivity extends Activity {
 
 
         mLogger.Logar("->Ok! Objetos criados!");
+    }
+
+    public void conecta()
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mBluetooth = new BluetoothRobo(self);
+                mBluetooth.Conectar();
+            }
+        });
     }
 
     @Override

@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pre-dex-items>
+<items version="2" >
 
     <item
-        dex="/home/neo/Documents/aron_bordin-robo1_android-040b90e4fdde/camera/build/intermediates/pre-dexed/debug/classes-7e48d3af136aba935c8813a4807aa8d55765ea3e.jar"
-        jar="/home/neo/Documents/aron_bordin-robo1_android-040b90e4fdde/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.1.0/classes.jar"
+        jar="/home/neo/Programacao/AndroidStudioProjects/Robo/camera/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.1.0/classes.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28"/>
+        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28">
+        <dex dex="/home/neo/Programacao/AndroidStudioProjects/Robo/camera/build/intermediates/pre-dexed/debug/classes-11a9a670934885aec64dbfd76cf0b7b6f33fc0ba.jar" />
+    </item>
     <item
-        dex="/home/neo/Documents/aron_bordin-robo1_android-040b90e4fdde/camera/build/intermediates/pre-dexed/debug/support-v4-19.1.0-95a363f7fadad141ffe290eb5375030e031abdb4.jar"
         jar="/opt/android-sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
-    <item
-        dex="/home/neo/Programacao/AndroidStudioProjects/Robo/camera/build/intermediates/pre-dexed/debug/classes-dab2751ccab496d11e7e2f3ce1b13f17c70ca928.jar"
-        jar="/home/neo/Programacao/AndroidStudioProjects/Robo/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.1.0/classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28"/>
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
+        <dex dex="/home/neo/Programacao/AndroidStudioProjects/Robo/camera/build/intermediates/pre-dexed/debug/support-v4-19.1.0-95a363f7fadad141ffe290eb5375030e031abdb4.jar" />
+    </item>
 
-</pre-dex-items>
+</items>

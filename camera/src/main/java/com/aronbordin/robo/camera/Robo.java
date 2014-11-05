@@ -30,6 +30,7 @@ public class Robo extends Thread{
     public Compass mCompass;
     private long lastTime = 0;
     private int FPS = 30;
+    private boolean pLinha = false;
 
 
     /**
@@ -159,6 +160,7 @@ public class Robo extends Thread{
 
                 break;
             case 8:
+            case 9:
             case 12:
             case 16:
             case 17:
@@ -167,6 +169,7 @@ public class Robo extends Thread{
             case 20:
             case 21:
             case 22:
+            case 24:
                 cmd = "3@8#";
                 if(!ultimaMsg.equals(cmd)) {
                     Logar("->Virar Esquerda!");
@@ -238,60 +241,221 @@ public class Robo extends Thread{
      * @return
      */
     private int getDistancia(){
-        String msg = "3@17@" + String.valueOf(msgPedida) + "#";
-        String valor;
-        valor = pedirValor(msg, msgPedida++);
-        valor = valor.trim();
-        return Integer.valueOf(valor);
+        if (isSeguindoLinha) {
+            String msg = "3@17@" + String.valueOf(msgPedida) + "#";
+            String valor;
+            valor = pedirValor(msg, msgPedida++);
+            valor = valor.trim();
+            return Integer.valueOf(valor);
+        }
+        return 0;
     }
 
     public void EncruzilhadaInvertida(){
-        int c = 0, i;
+        int c = 0, d = 0, i;
         isEncruzilhada = true;
-        mFuncoes.clear();
-        mFuncoes.add("3@4#");
-        mFuncoes.add("3@18@1000#");
-        mFuncoes.add("3@10#");
-        chamarFuncao();
+        String msg;
+        String v;
 
-        String msg = "3@666@" + String.valueOf(msgPedida) + "#";
-        String v = pedirValor(msg, msgPedida++);
-        lerCamera();
-        try{
-            sleep(200);
-        } catch (InterruptedException e){
-            //
-        }
-        for (i=0; i<5; i++)
-            c = c*2 + mCameraPreview.isPreto(i);
-
-        if(c == 0) {
-            msg = "3@23@" + String.valueOf(msgPedida) + "#";
-            v = pedirValor(msg, msgPedida++);
-            /*mFuncoes.add("3@8#");
-            chamarFuncao();
-            esperarAngulo(70);
+        for (int k = 0; k <= 3; k++){
+            mFuncoes.clear();
             mFuncoes.add("3@4#");
-            chamarFuncao();*/
+            mFuncoes.add("3@18@50#");
+            mFuncoes.add("3@10#");
+            chamarFuncao();
+
+            msg = "3@666@" + String.valueOf(msgPedida) + "#";
+            v = pedirValor(msg, msgPedida++);
+            lerCamera();
+            try{
+                sleep(200);
+            } catch (InterruptedException e){
+                //
+            }
+
+            d = d*2+    mCameraPreview.isPreto(4);
+            if(d != 0) {
+                //parent.mLogger.Logar("Vai encruzilhada");
+                Encruzilhada();
+                ultimaMsg = "";
+                return;
+            }
+
         }
+
+
+        //for (i=0; i<5; i++)
+            //c = c*2 + mCameraPreview.isPreto(3);
+
+
+
+
+            mFuncoes.clear();
+            mFuncoes.add("3@4#");
+            mFuncoes.add("3@18@900#");
+            mFuncoes.add("3@10#");
+            chamarFuncao();
+
+            msg = "3@666@" + String.valueOf(msgPedida) + "#";
+            v = pedirValor(msg, msgPedida++);
+
+            mFuncoes.clear();
+            mFuncoes.add("3@8#");//direita forte
+            mFuncoes.add("3@18@500#");
+
+            mFuncoes.add("3@10#");
+
+            chamarFuncao();
+
+            msg = "3@666@" + String.valueOf(msgPedida) + "#";
+            v = pedirValor(msg, msgPedida++);
+
+            pLinha = true;
+            int s;
+            while (pLinha) {
+                lerCamera();
+                mFuncoes.clear();
+                try {
+                    sleep(200);
+                } catch (InterruptedException e) {
+                    //
+                }
+                s = 0;
+                for (i = 0; i < 5; i++)
+                    s = s * 2 + mCameraPreview.isPreto(i);
+                    Logar(""+s);
+
+                if (s == 0) {
+
+
+                    mFuncoes.add("3@8#");//esquerda forte
+                    mFuncoes.add("3@18@100#");
+
+                    mFuncoes.add("3@10#");
+
+                    chamarFuncao();
+
+                    msg = "3@666@" + String.valueOf(msgPedida) + "#";
+                    v = pedirValor(msg, msgPedida++);
+
+                }
+                else
+                {
+                    Logar("Saiu Encruzilhada");
+                    pLinha = false;
+                }
+
+            }
+
+
+
+
+
+
         mFuncoes.clear();
         ultimaMsg = "";
         isEncruzilhada = false;
+
     }
 
 
     public void Encruzilhada(){
         isEncruzilhada = true;
         mFuncoes.clear();
-        String msg = "3@19@" + String.valueOf(msgPedida) + "#";
-        String v = pedirValor(msg, msgPedida++);
-        /*mFuncoes.add("3@4#");
-        mFuncoes.add("3@18@1500#");
-        mFuncoes.add("3@6#");
+        //String msg = "3@19@" + String.valueOf(msgPedida) + "#";
+        //String v = pedirValor(msg, msgPedida++);
+
+        mFuncoes.add("3@4#");//frente
+        mFuncoes.add("3@18@20#");
+        mFuncoes.add("3@10#");
         chamarFuncao();
-        esperarAngulo(70);
-        mFuncoes.add("3@4#");
-        chamarFuncao();*/
+
+        String msg = "3@666@" + String.valueOf(msgPedida) + "#";
+        String v = pedirValor(msg, msgPedida++);
+
+        lerCamera();
+        mFuncoes.clear();
+        try{
+            sleep(200);
+        } catch (InterruptedException e){
+            //
+        }
+        int c = 0;
+        for (int i=0; i<5; i++)
+            c = c*2 + mCameraPreview.isPreto(i);
+
+        if(c == 7 || c == 15 || c == 31) {
+            //mFuncoes.add("3@4#");//frente
+            //mFuncoes.add("3@18@1000#");
+
+
+            mFuncoes.add("3@6#");//direita forte
+            mFuncoes.add("3@18@100#");
+
+            mFuncoes.add("3@10#");
+
+            chamarFuncao();
+
+            msg = "3@666@" + String.valueOf(msgPedida) + "#";
+            v = pedirValor(msg, msgPedida++);
+        }
+
+        mFuncoes.clear();
+        mFuncoes.add("3@4#");//frente
+        mFuncoes.add("3@18@900#");
+        chamarFuncao();
+
+        msg = "3@666@" + String.valueOf(msgPedida) + "#";
+        v = pedirValor(msg, msgPedida++);
+
+        mFuncoes.clear();
+        mFuncoes.add("3@6#");//direita forte
+        mFuncoes.add("3@18@500#");
+
+        mFuncoes.add("3@10#");
+
+        chamarFuncao();
+
+        msg = "3@666@" + String.valueOf(msgPedida) + "#";
+        v = pedirValor(msg, msgPedida++);
+
+        pLinha = true;
+
+        while(pLinha)
+        {
+            lerCamera();
+            mFuncoes.clear();
+            try{
+                sleep(200);
+            } catch (InterruptedException e){
+                //
+            }
+            c = 0;
+            for (int i=0; i<5; i++)
+                c = c*2 + mCameraPreview.isPreto(i);
+
+            if(c == 0) {
+                //mFuncoes.add("3@4#");//frente
+                //mFuncoes.add("3@18@1000#");
+
+                mFuncoes.add("3@6#");//direita forte
+                mFuncoes.add("3@18@100#");
+
+                mFuncoes.add("3@10#");
+
+                chamarFuncao();
+
+                 msg = "3@666@" + String.valueOf(msgPedida) + "#";
+                 v = pedirValor(msg, msgPedida++);
+
+            }
+            else
+            {
+                pLinha = false;
+            }
+
+        }
+
         ultimaMsg = "";
         isEncruzilhada = false;
     }
@@ -329,6 +493,19 @@ public class Robo extends Thread{
         mFuncoes.add("3@4#");//frente
         mFuncoes.add("3@18@3500#");
         chamarFuncao();
+        msg = "3@666@" + String.valueOf(msgPedida) + "#";
+        valor = pedirValor(msg, msgPedida++);
+
+        mFuncoes.clear();
+        mFuncoes.add("3@8#");//Esquerda
+        mFuncoes.add("3@18@1500#");
+
+        mFuncoes.add("3@4#");//frente
+        mFuncoes.add("3@18@1000#");
+
+        chamarFuncao();
+
+
         msg = "3@666@" + String.valueOf(msgPedida) + "#";
         valor = pedirValor(msg, msgPedida++);
 
