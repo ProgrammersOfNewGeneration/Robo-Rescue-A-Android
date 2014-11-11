@@ -299,6 +299,30 @@ public class Robo extends Thread{
             msg = "3@666@" + String.valueOf(msgPedida) + "#";
             v = pedirValor(msg, msgPedida++);
 
+            //testa pra ir pra frente
+            lerCamera();
+            try{
+                sleep(200);
+            } catch (InterruptedException e){
+                //
+            }
+
+            int a1 = mCameraPreview.isPreto(2)+mCameraPreview.isPreto(3) + mCameraPreview.isPreto(4);
+            if (a1 != 0)
+            {
+                mFuncoes.clear();
+                mFuncoes.add("3@4#");
+                mFuncoes.add("3@18@100#");
+                chamarFuncao();
+                msg = "3@666@" + String.valueOf(msgPedida) + "#";
+                v = pedirValor(msg, msgPedida++);
+                mFuncoes.clear();
+                ultimaMsg = "";
+                isEncruzilhada = false;
+                return;
+            }
+
+
             mFuncoes.clear();
             mFuncoes.add("3@8#");//direita forte
             mFuncoes.add("3@18@500#");
@@ -479,29 +503,29 @@ public class Robo extends Thread{
         String valor = pedirValor(msg, msgPedida++);
 
         mFuncoes.add("3@4#");//frente
-        mFuncoes.add("3@18@2500#");
+        mFuncoes.add("3@18@1800#");
         chamarFuncao();
         msg = "3@666@" + String.valueOf(msgPedida) + "#";
         valor = pedirValor(msg, msgPedida++);
 
         mFuncoes.add("3@8#");//esquerda
-        mFuncoes.add("3@18@1000#");
+        mFuncoes.add("3@18@900#");
         chamarFuncao();
         msg = "3@666@" + String.valueOf(msgPedida) + "#";
         valor = pedirValor(msg, msgPedida++);
 
         mFuncoes.add("3@4#");//frente
-        mFuncoes.add("3@18@3500#");
+        mFuncoes.add("3@18@4000#");
         chamarFuncao();
         msg = "3@666@" + String.valueOf(msgPedida) + "#";
         valor = pedirValor(msg, msgPedida++);
 
         mFuncoes.clear();
         mFuncoes.add("3@8#");//Esquerda
-        mFuncoes.add("3@18@1500#");
+        mFuncoes.add("3@18@500#");
 
         mFuncoes.add("3@4#");//frente
-        mFuncoes.add("3@18@1000#");
+        mFuncoes.add("3@18@500#");
 
         chamarFuncao();
 
