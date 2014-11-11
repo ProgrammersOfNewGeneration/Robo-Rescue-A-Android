@@ -250,7 +250,7 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         for(i = 0; i < 5; i++){
             if(blocosMaior[i] > Maior)
                 Maior = blocosMaior[i];
-            if(blocosMedia[i] < Menor)
+            if(blocosMenor[i] < Menor)
                 Menor = blocosMenor[i];
         }
 
