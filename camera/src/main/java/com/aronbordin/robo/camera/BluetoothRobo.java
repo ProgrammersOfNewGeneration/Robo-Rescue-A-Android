@@ -99,7 +99,7 @@ public class BluetoothRobo extends Thread {
      * @param p parent - Classe principal da aplicação, a MainActiviry
      */
     BluetoothRobo(MainActivity p){
-        this(p, "Robo2-TCC");
+        this(p, "Robo1-TCC");
     }
 
     /**

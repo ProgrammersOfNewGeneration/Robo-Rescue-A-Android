@@ -173,7 +173,7 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
                     blocosQtdSoma[i] = 0;
                 }
 
-                int posFaixaIni = 290;
+                int posFaixaIni = 295;
                 int posFaixaFim = 300;
                 for (i=0; i<240; i++) {
                     if(i % 48 == 0)
