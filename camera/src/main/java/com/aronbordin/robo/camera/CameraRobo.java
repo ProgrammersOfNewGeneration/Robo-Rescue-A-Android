@@ -166,18 +166,23 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         try{
             //impede que esse bloco mais de uma vez ao mesmo tempo
             synchronized (mHolder){
-                int i, k, j = 5;
+                int i, j = 5;
+                //zera os valores de cada bloco
                 for (i = 0; i < 5; i++) {
                     blocosMedia[i] = 0;
                     blocosQtdSoma[i] = 0;
                 }
 
-                int posFaixa = 300;
-                int nivelPreto = 70;
+                int posFaixaIni = 290;
+                int posFaixaFim = 300;
                 for (i=0; i<240; i++) {
                     if(i % 48 == 0)
                         j--;
-                    blocosMedia[j] += ((int) data[posFaixa + 320 * i]) & 0xff;
+                    int valor = 0;
+                    for(int k = posFaixaIni; k <= posFaixaFim; k++)
+                        valor += ((int) data[k + 320*i]) & 0xff;
+                    valor /= (posFaixaFim-posFaixaIni);
+                    blocosMedia[j] += valor;
                     blocosQtdSoma[j]++;
                 }
 
@@ -245,28 +250,17 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
      * Termina a calibração, analisando os dados coletados e gerando os novos limites
      */
     protected void CalibrarFim(){
-        int Menor = 1000, Maior = -1;
+        int Menor = blocosMenor[0], Maior = blocosMaior[0];
         int i;
         for(i = 0; i < 5; i++){
-            if(blocosMaior[i] > Maior)
+            if(blocosMaior[i] < Maior)
                 Maior = blocosMaior[i];
-            if(blocosMenor[i] < Menor)
+            if(blocosMenor[i] > Menor)
                 Menor = blocosMenor[i];
         }
 
         blocosDivisor = (Maior + Menor)/2;
         parent.mLogger.Logar("-> Maior: " + Maior + " Menor: "  + Menor + " Media: " + blocosDivisor);
-//        String msg = "";
-//        for(i = 0; i < 5; i++){
-//            msg += blocosMaior[i] + " _ " ;
-//        }
-//        parent.mLogger.Logar("Maiores: " + msg);
-//        msg = "";
-//        for(i = 0; i < 5; i++){
-//            somaMenor += blocosMenor[i];
-//            msg += blocosMenor[i] + " _ ";
-//        }
-//        parent.mLogger.Logar("Menores " + msg);
 
 
         isCalibrando = false;
@@ -344,17 +338,6 @@ public class CameraRobo extends SurfaceView implements SurfaceHolder.Callback, C
         }
 
         if(v == mBloco2){
-            /*new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    parent.mRobo.Desviar();
-                }
-            }).start();*/
-
-
-
-
-
 
         }
 

@@ -29,7 +29,7 @@ public class Robo extends Thread{
     private String ultimaMsg = "";
     public Compass mCompass;
     private long lastTime = 0;
-    private int FPS = 30;
+    private int FPS = 15;
     private boolean pLinha = false;
 
 
@@ -91,10 +91,11 @@ public class Robo extends Thread{
                 lastTime = System.currentTimeMillis();
                 if(isRodando)
                     Loop();
-                int tempoDelay = FPS/1000 - (int)(lastTime - System.currentTimeMillis());
+                int tempoDelay = 1000/FPS - (int)(System.currentTimeMillis() - lastTime);
                 if(tempoDelay < 0)
                     Logar("-Alerta!!! Lentidão no processamento! Tempo perdido: " + tempoDelay*-1);
-                sleep(tempoDelay);
+                else
+                    sleep(tempoDelay);
             }
         } catch (Exception e){
             LogarErro("Erro de execução: " + e.getMessage() + e.getStackTrace());
@@ -170,7 +171,7 @@ public class Robo extends Thread{
             case 21:
             case 22:
             case 24:
-                cmd = "3@8#";
+                cmd = "3@7#";
                 if(!ultimaMsg.equals(cmd)) {
                     Logar("->Virar Esquerda!");
                     mFuncoes.add(cmd);
@@ -194,7 +195,7 @@ public class Robo extends Thread{
          //   case 7:
           //  case 15:
             case 23://##
-                cmd = "3@6#";
+                cmd = "3@5#";
                 if(!ultimaMsg.equals(cmd)) {
                     Logar("->Virar Direita!!");
                     mFuncoes.add(cmd);
@@ -217,7 +218,7 @@ public class Robo extends Thread{
             @Override
             public void run() {
                 try {
-                    if ((interacao % 10) == 0)
+                    if ((interacao % 5) == 0)
                         checarDistancia();
                 } catch (Exception e) {
                 }
