@@ -93,7 +93,7 @@ public class Robo extends Thread{
                     Loop();
                 int tempoDelay = 1000/FPS - (int)(System.currentTimeMillis() - lastTime);
                 if(tempoDelay < 0)
-                    Logar("-Alerta!!! Lentidão no processamento! Tempo perdido: " + tempoDelay*-1);
+                    Logar("-Alerta!!! Tempo perdido: " + tempoDelay*-1);
                 else
                     sleep(tempoDelay);
             }
@@ -141,13 +141,13 @@ public class Robo extends Thread{
 
         switch (c) {
             case 0:
-               // Logar("->Gap...");
+                // Logar("->Gap...");
                 cmd = "3@4#";
                 if(!ultimaMsg.equals(cmd)) {
                     mFuncoes.add(cmd);
                     ultimaMsg = cmd;
                 }
-            break;
+                break;
 
             case 7:
             case 15:
@@ -192,8 +192,8 @@ public class Robo extends Thread{
             case 3:
             case 5: //##
             case 6:
-         //   case 7:
-          //  case 15:
+                //   case 7:
+                //  case 15:
             case 23://##
                 cmd = "3@5#";
                 if(!ultimaMsg.equals(cmd)) {
@@ -202,14 +202,14 @@ public class Robo extends Thread{
                     ultimaMsg = cmd;
                 }
                 break;
-           case 28:
+            case 28:
                 Logar("->Encruzilhada Invertidat!!");
                 new Thread() {
                     public void run() {
                         EncruzilhadaInvertida();
                     }
                 }.start();
-               break;
+                break;
         }
         if(isDesviando == true || isEncruzilhada == true)
             return;
@@ -286,91 +286,91 @@ public class Robo extends Thread{
 
 
         //for (i=0; i<5; i++)
-            //c = c*2 + mCameraPreview.isPreto(3);
+        //c = c*2 + mCameraPreview.isPreto(3);
 
 
 
 
+        mFuncoes.clear();
+        mFuncoes.add("3@4#");
+        mFuncoes.add("3@18@900#");
+        mFuncoes.add("3@10#");
+        chamarFuncao();
+
+        msg = "3@666@" + String.valueOf(msgPedida) + "#";
+        v = pedirValor(msg, msgPedida++);
+
+        //testa pra ir pra frente
+        lerCamera();
+        try{
+            sleep(200);
+        } catch (InterruptedException e){
+            //
+        }
+
+        int a1 = mCameraPreview.isPreto(2)+mCameraPreview.isPreto(3) + mCameraPreview.isPreto(4);
+        if (a1 != 0)
+        {
             mFuncoes.clear();
             mFuncoes.add("3@4#");
-            mFuncoes.add("3@18@900#");
-            mFuncoes.add("3@10#");
+            mFuncoes.add("3@18@100#");
             chamarFuncao();
-
             msg = "3@666@" + String.valueOf(msgPedida) + "#";
             v = pedirValor(msg, msgPedida++);
+            mFuncoes.clear();
+            ultimaMsg = "";
+            isEncruzilhada = false;
+            return;
+        }
 
-            //testa pra ir pra frente
+
+        mFuncoes.clear();
+        mFuncoes.add("3@8#");//direita forte
+        mFuncoes.add("3@18@500#");
+
+        mFuncoes.add("3@10#");
+
+        chamarFuncao();
+
+        msg = "3@666@" + String.valueOf(msgPedida) + "#";
+        v = pedirValor(msg, msgPedida++);
+
+        pLinha = true;
+        int s;
+        while (pLinha) {
             lerCamera();
-            try{
+            mFuncoes.clear();
+            try {
                 sleep(200);
-            } catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 //
             }
+            s = 0;
+            for (i = 0; i < 5; i++)
+                s = s * 2 + mCameraPreview.isPreto(i);
+            Logar(""+s);
 
-            int a1 = mCameraPreview.isPreto(2)+mCameraPreview.isPreto(3) + mCameraPreview.isPreto(4);
-            if (a1 != 0)
-            {
-                mFuncoes.clear();
-                mFuncoes.add("3@4#");
+            if (s == 0) {
+
+
+                mFuncoes.add("3@8#");//esquerda forte
                 mFuncoes.add("3@18@100#");
+
+                mFuncoes.add("3@10#");
+
                 chamarFuncao();
+
                 msg = "3@666@" + String.valueOf(msgPedida) + "#";
                 v = pedirValor(msg, msgPedida++);
-                mFuncoes.clear();
-                ultimaMsg = "";
-                isEncruzilhada = false;
-                return;
-            }
-
-
-            mFuncoes.clear();
-            mFuncoes.add("3@8#");//direita forte
-            mFuncoes.add("3@18@500#");
-
-            mFuncoes.add("3@10#");
-
-            chamarFuncao();
-
-            msg = "3@666@" + String.valueOf(msgPedida) + "#";
-            v = pedirValor(msg, msgPedida++);
-
-            pLinha = true;
-            int s;
-            while (pLinha) {
-                lerCamera();
-                mFuncoes.clear();
-                try {
-                    sleep(200);
-                } catch (InterruptedException e) {
-                    //
-                }
-                s = 0;
-                for (i = 0; i < 5; i++)
-                    s = s * 2 + mCameraPreview.isPreto(i);
-                    Logar(""+s);
-
-                if (s == 0) {
-
-
-                    mFuncoes.add("3@8#");//esquerda forte
-                    mFuncoes.add("3@18@100#");
-
-                    mFuncoes.add("3@10#");
-
-                    chamarFuncao();
-
-                    msg = "3@666@" + String.valueOf(msgPedida) + "#";
-                    v = pedirValor(msg, msgPedida++);
-
-                }
-                else
-                {
-                    Logar("Saiu Encruzilhada");
-                    pLinha = false;
-                }
 
             }
+            else
+            {
+                Logar("Saiu Encruzilhada");
+                pLinha = false;
+            }
+
+        }
 
 
 
@@ -383,6 +383,7 @@ public class Robo extends Thread{
 
     }
 
+    // dlç de robo cara
 
     public void Encruzilhada(){
         isEncruzilhada = true;
@@ -437,6 +438,8 @@ public class Robo extends Thread{
         mFuncoes.add("3@6#");//direita forte
         mFuncoes.add("3@18@500#");
 
+
+
         mFuncoes.add("3@10#");
 
         chamarFuncao();
@@ -470,8 +473,8 @@ public class Robo extends Thread{
 
                 chamarFuncao();
 
-                 msg = "3@666@" + String.valueOf(msgPedida) + "#";
-                 v = pedirValor(msg, msgPedida++);
+                msg = "3@666@" + String.valueOf(msgPedida) + "#";
+                v = pedirValor(msg, msgPedida++);
 
             }
             else
@@ -504,19 +507,19 @@ public class Robo extends Thread{
         String valor = pedirValor(msg, msgPedida++);
 
         mFuncoes.add("3@4#");//frente
-        mFuncoes.add("3@18@1800#");
+        mFuncoes.add("3@18@2000#");
         chamarFuncao();
         msg = "3@666@" + String.valueOf(msgPedida) + "#";
         valor = pedirValor(msg, msgPedida++);
 
         mFuncoes.add("3@8#");//esquerda
-        mFuncoes.add("3@18@900#");
+        mFuncoes.add("3@18@800#");
         chamarFuncao();
         msg = "3@666@" + String.valueOf(msgPedida) + "#";
         valor = pedirValor(msg, msgPedida++);
 
         mFuncoes.add("3@4#");//frente
-        mFuncoes.add("3@18@4000#");
+        mFuncoes.add("3@18@3500#");
         chamarFuncao();
         msg = "3@666@" + String.valueOf(msgPedida) + "#";
         valor = pedirValor(msg, msgPedida++);
@@ -524,24 +527,70 @@ public class Robo extends Thread{
         mFuncoes.clear();
         mFuncoes.add("3@8#");//Esquerda
         mFuncoes.add("3@18@500#");
-
-        mFuncoes.add("3@4#");//frente
-        mFuncoes.add("3@18@500#");
-
+        mFuncoes.add("3@4#");//direita forte
+        mFuncoes.add("3@18@400#");
         chamarFuncao();
 
+        //colocar função para ler linha
+        int d;
+        while(true)
+        {
+            msg = "3@666@" + String.valueOf(msgPedida) + "#";
+            valor = pedirValor(msg, msgPedida++);
 
-        msg = "3@666@" + String.valueOf(msgPedida) + "#";
-        valor = pedirValor(msg, msgPedida++);
+            mFuncoes.add("3@10#");
+            chamarFuncao();
+            msg = "3@666@" + String.valueOf(msgPedida) + "#";
+            valor = pedirValor(msg, msgPedida++);
+            lerCamera();
+            try{
+                sleep(200);
+            } catch (InterruptedException e){
+                //
+            }
 
-        isDesviando = false;
+            d = mCameraPreview.isPreto(4) + mCameraPreview.isPreto(3) + mCameraPreview.isPreto(2) + mCameraPreview.isPreto(1) + mCameraPreview.isPreto(0);
+            if(d == 0) {
+                mFuncoes.add("3@4#");//frente
+                mFuncoes.add("3@18@100#");
+            } else
+            {
+                Encruzilhada();
+                msg = "3@666@" + String.valueOf(msgPedida) + "#";
+                valor = pedirValor(msg, msgPedida++);
 
-        parent.runOnUiThread(new Runnable() {
+                isDesviando = false;
+
+                parent.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        parent.mLogger.Logar("\t->Desviar ok");
+                    }
+                });
+
+                return;
+            }
+
+
+            chamarFuncao();
+        }
+
+
+
+        //chamarFuncao();
+
+
+        //msg = "3@666@" + String.valueOf(msgPedida) + "#";
+        //valor = pedirValor(msg, msgPedida++);
+
+        //isDesviando = false;
+
+        /*parent.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 parent.mLogger.Logar("\t->Desviar ok");
             }
-        });
+        });*/
        /* mFuncoes.add("3@6#");
         chamarFuncao();
         esperarAngulo(90);
@@ -598,9 +647,9 @@ public class Robo extends Thread{
      * @return String com o valor pedido
      */
     public String pedirValor(String msg, int id){
-       synchronized (mBluetoothRobo) {
+        synchronized (mBluetoothRobo) {
             mBluetoothRobo.enviarMsg(msg);
-        int k = 0;
+            int k = 0;
 
             while (!mBluetoothRobo.hasMensagem(id))
                 try {
